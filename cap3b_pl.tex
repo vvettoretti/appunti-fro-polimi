@@ -1,0 +1,263 @@
+\chapter[Programmazione Lineare: geometria e ottimo]{Programmazione Lineare: forme, geometria e proprietà dell'ottimo}\label{cap:pl}
+
+\begin{oss}[nota su questo capitolo]
+Scritto a partire dalle slide \texttt{04\_ProgrammazioneLineare} (pubblicate il 3/10, prima della lezione). Molte slide sono riquadri vuoti completati alla lavagna: definizioni, esempi e dimostrazioni sono stati ricostruiti in modo standard. Quando avrai visto la lezione, segnala eventuali differenze di notazione e le allineo.
+\end{oss}
+
+Parte del programma che inizia qui: risoluzione grafica, forme alternative, geometria della PL, proprietà della soluzione ottima; poi (prossime slide) metodo del simplesso e dualità. In tutto il capitolo le variabili sono \textbf{continue}.
+
+\section{Il coltivatore, riscalato}
+
+Esprimendo la resa in migliaia di euro e lo stallatico in decine di tonnellate, il modello di \S\ref{sec:colt} diventa
+\[
+\max\ 3x_L+5x_P\quad \st\ x_L+x_P\le12,\ \ x_L\le10,\ \ x_P\le6,\ \ x_L+2x_P\le16,\ \ x_L,x_P\ge0,
+\]
+cioè $\max\{c^Tx: Ax\le b,\ x\ge0\}$ con
+$c=\binom{3}{5}$ e
+\[
+A=\begin{pmatrix}1&1\\1&0\\0&1\\1&2\end{pmatrix},\qquad b=\begin{pmatrix}12\\10\\6\\16\end{pmatrix}.
+\]
+(Dividere un vincolo per una costante positiva o riscalare l'obiettivo non cambia le soluzioni ottime; l'ottimo è ancora $(8,4)$, con valore $44$ migliaia di euro.)
+
+\section{Definizioni (richiamo)}
+Per $(P)\ \max\{c^Tx: Ax\le b, x\ge0\}$:
+\begin{itemize}[nosep]
+\item \textbf{soluzione ammissibile}: $\bar x$ con $A\bar x\le b$, $\bar x\ge0$;
+\item \textbf{regione ammissibile}: $X=\{x\in\R^n: Ax\le b,\ x\ge0\}$;
+\item \textbf{problema inammissibile}: $X=\emptyset$;
+\item \textbf{soluzione ottima}: $x^*\in X$ con $c^Tx^*\ge c^Tx$ per ogni $x\in X$;
+\item \textbf{problema illimitato}: per ogni $M$ esiste $x\in X$ con $c^Tx>M$.
+\end{itemize}
+
+\section{Forme di un problema di PL}
+
+In generale un problema di PL può avere vincoli di tutti i tipi e variabili di tutti i segni:
+\[
+\max\ (\text{o}\min)\ c^Tx\quad\st\ A_1x\le b_1,\quad A_2x\ge b_2,\quad A_3x=b_3,\quad x_j\ge0,\ x_j\le0\ \text{o libere}.
+\]
+Due forme ``di riferimento'':
+\begin{center}
+\begin{tabular}{@{}c@{\qquad\qquad}c@{}}
+\textbf{Forma standard} & \textbf{Forma canonica (o generale)}\\[3pt]
+$\begin{aligned}\min\ &c^Tx\\ \st\ &Ax=b\\ &x\ge0\end{aligned}$ \quad (con $b\ge0$)
+&
+$\begin{aligned}\max\ &c^Tx\\ \st\ &Ax\le b\\ &x\ge0\end{aligned}$
+\end{tabular}
+\end{center}
+La forma standard serve al \textbf{simplesso} (lavora con sistemi di equazioni), la forma canonica è comoda per la \textbf{geometria} e per la \textbf{dualità}.
+
+\begin{prop}
+Ogni problema di PL può essere scritto in modo equivalente in forma standard, e in modo equivalente in forma canonica.
+\end{prop}
+``Equivalente'' significa: da ogni soluzione (ottima) dell'uno si ricava in modo immediato una soluzione (ottima) dell'altro, con lo stesso valore dell'obiettivo (a meno del segno).
+
+\subsection{Trasformazioni}
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}p{0.2\textwidth}p{0.36\textwidth}p{0.36\textwidth}@{}}
+\toprule
+ & Da & A\\ \midrule
+\textbf{Obiettivo} & $\max c^Tx$ & $-\min(-c^T x)$\\
+ & $\min c^Tx$ & $-\max(-c^Tx)$\\ \midrule
+\textbf{Variabili} & $x_j\le0$ & $x_j=-x_j'$, \ $x_j'\ge0$\\
+ & $x_j$ libera & $x_j=x_j^+-x_j^-$, \ $x_j^+,x_j^-\ge0$\\ \midrule
+\textbf{Vincoli} & $a^Tx\le b$ & $a^Tx+s=b$, \ $s\ge0$ \ (\emph{slack})\\
+ & $a^Tx\ge b$ & $a^Tx-s=b$, \ $s\ge0$ \ (\emph{surplus})\\
+ & $a^Tx\ge b$ & $-a^Tx\le -b$\\
+ & $a^Tx=b$ & $a^Tx\le b$ \ e \ $-a^Tx\le -b$\\
+ & $a^Tx=b$ con $b<0$ & $-a^Tx=-b$ \ (per avere $b\ge0$)\\
+\bottomrule
+\end{tabular}
+\end{center}
+Le variabili di slack/surplus hanno un significato: la slack del vincolo di terreno è l'\emph{ettaraggio non usato}. All'ottimo, slack $=0$ significa vincolo \emph{attivo} (risorsa satura).
+
+\begin{esbox}[coltivatore in forma standard]
+\[
+\begin{aligned}
+-\min\ & -3x_L-5x_P\\
+\st\ & x_L+x_P+s_1=12\\
+& x_L+s_2=10\\
+& x_P+s_3=6\\
+& x_L+2x_P+s_4=16\\
+& x_L,x_P,s_1,s_2,s_3,s_4\ge0
+\end{aligned}
+\]
+All'ottimo $(x_L,x_P)=(8,4)$: $s=(0,2,2,0)$ (terreno e stallatico saturi; avanzano 2 unità di semi e di tuberi nelle unità riscalate). Il coltivatore è \emph{già} in forma canonica.
+\end{esbox}
+
+\begin{esbox}[problema misto in entrambe le forme]
+$\min\{x_1-2x_2:\ x_1+x_2\ge 2,\ \ x_1-x_2=-1,\ \ x_1\ge0,\ x_2\text{ libera}\}$.
+\textbf{Standard}: $x_2=x_2^+-x_2^-$; il vincolo $\ge$ prende un surplus; l'uguaglianza ha termine noto negativo e si moltiplica per $-1$:
+\[\min\ x_1-2x_2^++2x_2^-\ \ \st\ x_1+x_2^+-x_2^--s_1=2,\ \ -x_1+x_2^+-x_2^-=1,\ \ x_1,x_2^+,x_2^-,s_1\ge0.\]
+\textbf{Canonica}: $\max\{-x_1+2x_2^+-2x_2^-:\ -x_1-x_2^++x_2^-\le-2,\ \ x_1-x_2^++x_2^-\le-1,\ \ -x_1+x_2^+-x_2^-\le1,\ \ x\ge0\}$ (il valore ottimo è l'opposto).
+\end{esbox}
+
+\section{Risoluzione grafica}
+
+Ogni vincolo $a_i^Tx\le b_i$ è associato all'\textbf{iperpiano} $\{x\in\R^n:a_i^Tx=b_i\}$ (in $\R^2$ una retta) e definisce il \textbf{semispazio chiuso} ammissibile $\{x:a_i^Tx\le b_i\}$. La regione ammissibile è l'intersezione di tutti i semispazi.
+
+Le \textbf{curve di livello} dell'obiettivo sono gli iperpiani $c^Tx=z$: rette parallele, ognuna associata a un valore $z$. Il \textbf{gradiente} $\nabla(c^Tx)=c$ è perpendicolare alle curve di livello e indica la direzione di crescita.
+
+\textbf{Procedura} (2 variabili): disegna la regione; disegna una curva di livello; spostala parallelamente nella direzione di $c$ (per un $\min$: nella direzione $-c$) fino all'ultima posizione in cui tocca ancora la regione. Il valore di quella retta è l'ottimo, i punti di contatto sono le soluzioni ottime. Per il coltivatore: $3x_L+5x_P=0,30,42,44$; l'ultima che tocca è $z=44$ in $(8,4)$ (vedi la figura di \S\ref{sec:colt}). Il punto esatto si trova risolvendo il sistema dei due vincoli attivi: $x_L+x_P=12$, $x_L+2x_P=16$.
+
+\textbf{Osservazione}: la soluzione ottima si trova sulla \emph{frontiera} della regione ammissibile.
+
+\subsection{Quante soluzioni ottime può avere una PL?}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.36,>=Stealth]
+\begin{scope}
+\fill[blue!12] (0,0)--(10,0)--(10,2)--(8,4)--(4,6)--(0,6)--cycle;
+\draw[->] (-0.3,0)--(11.5,0); \draw[->] (0,-0.3)--(0,8);
+\draw[thick] (0,0)--(10,0)--(10,2)--(8,4)--(4,6)--(0,6)--cycle;
+\draw[dashed,red] (3,7)--(11.5,1.9); \fill[red] (8,4) circle (5pt);
+\node[font=\scriptsize,align=center] at (5.5,-2) {(a) ottimo unico\\ $\max 3x_1+5x_2$};
+\end{scope}
+\begin{scope}[xshift=14cm]
+\fill[blue!12] (0,0)--(10,0)--(10,2)--(8,4)--(4,6)--(0,6)--cycle;
+\draw[->] (-0.3,0)--(11.5,0); \draw[->] (0,-0.3)--(0,8);
+\draw[thick] (0,0)--(10,0)--(10,2)--(8,4)--(4,6)--(0,6)--cycle;
+\draw[ultra thick,red] (8,4)--(10,2);
+\node[font=\scriptsize,align=center] at (5.5,-2) {(b) infinite soluzioni ottime\\ $\max x_1+x_2$ (spigolo)};
+\end{scope}
+\begin{scope}[xshift=28cm]
+\fill[blue!12] (0,0)--(11,0)--(11,5)--(0,5)--cycle;
+\draw[->] (-0.3,0)--(11.5,0); \draw[->] (0,-0.3)--(0,8);
+\draw[thick] (11,0)--(0,0)--(0,5)--(11,5);
+\draw[->,thick,red] (4,2.5)--(8,2.5);
+\node[font=\scriptsize,align=center] at (5.5,-2) {(c) illimitato\\ $\max x_1$, \ $0\le x_2\le5$, $x_1\ge0$};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+\begin{itemize}[nosep]
+\item \textbf{(a) Unica} soluzione ottima, in un vertice.
+\item \textbf{(b) Infinite} soluzioni ottime: la curva di livello è parallela a un lato della regione; ottimi tutti i punti del segmento tra $(8,4)$ e $(10,2)$, valore 12. Gli estremi del segmento sono vertici.
+\item \textbf{(c) Problema illimitato}: regione illimitata e obiettivo che cresce lungo una direzione in cui ci si può muovere all'infinito. Attenzione: \emph{regione illimitata non implica problema illimitato}: sulla stessa regione $\min x_1$ ha ottimo (segmento $x_1=0$) e $\max x_2$ ha ottimo $x_2=5$ (infiniti punti).
+\item \textbf{Problema inammissibile}: $X=\emptyset$, nessuna soluzione (es.\ $x_1+x_2\le1$, $x_1+x_2\ge2$).
+\end{itemize}
+\begin{esame}
+Un problema di PL è sempre in uno di questi casi: \textbf{inammissibile}, \textbf{illimitato}, oppure ha \textbf{ottimo finito}, raggiunto in 1 punto o in infiniti punti. \textbf{Mai esattamente 2} (o un numero finito $>1$) soluzioni ottime. Con variabili intere invece può succedere: $\max\{x_1+x_2: x_1+x_2\le1,\ x\in\{0,1\}^2\}$ ha esattamente 2 soluzioni ottime.
+\end{esame}
+
+\section{Geometria della PL}
+
+\subsection{Combinazioni}
+Dati $x^1,\dots,x^k\in\R^n$ e pesi $\lambda_1,\dots,\lambda_k$, il punto $y=\sum_i\lambda_ix^i$ è una combinazione
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{lineare} & $\lambda_i\in\R$ & in $\R^2$, di 2 vettori indipendenti: tutto il piano\\
+\textbf{affine} & $\sum_i\lambda_i=1$ & di 2 punti: la retta che li contiene\\
+\textbf{conica} & $\lambda_i\ge0$ & di 2 vettori: l'``angolo'' tra le due semirette dall'origine\\
+\textbf{convessa} & $\lambda_i\ge0$, $\sum_i\lambda_i=1$ & di 2 punti: il segmento; di 3: il triangolo\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{esbox}[esempi delle slide]
+\begin{itemize}[nosep]
+\item $(2,2)$ è combinazione convessa di $(4,0)$ e $(1,3)$: $\lambda(4,0)+(1-\lambda)(1,3)=(1+3\lambda,\ 3-3\lambda)=(2,2)$ per $\lambda=\tfrac13\in[0,1]$.
+\item $(2,2)$ è combinazione convessa di $(1,1),(3,1),(2,3)$: dal sistema $\lambda_1+3\lambda_2+2\lambda_3=2$, $\lambda_1+\lambda_2+3\lambda_3=2$, $\lambda_1+\lambda_2+\lambda_3=1$ si ottiene $\lambda=(\tfrac14,\tfrac14,\tfrac12)\ge0$.
+\item $(4,4)$ è combinazione conica di $(2,3)$ e $(3,1)$: $2a+3b=4$, $3a+b=4$ danno $a=\tfrac87$, $b=\tfrac47$, entrambi $\ge0$. (Non è convessa: $a+b=\tfrac{12}{7}\ne1$.)
+\end{itemize}
+Metodo: imposta il sistema lineare nei pesi e controlla i segni (e la somma).
+\end{esbox}
+
+\subsection{Insiemi convessi, coni, involucri}
+\begin{defbox}[insieme convesso]
+$S\subseteq\R^n$ è \textbf{convesso} se per ogni $x,y\in S$ e $\lambda\in[0,1]$ si ha $\lambda x+(1-\lambda)y\in S$ (contiene il segmento tra due suoi punti qualsiasi).
+\end{defbox}
+\begin{defbox}[cono]
+$C\subseteq\R^n$ è un \textbf{cono} se $x\in C\Rightarrow \lambda x\in C$ per ogni $\lambda\ge0$. Un cono non è necessariamente convesso: l'unione dei due semiassi positivi $\{x\ge0: x_1x_2=0\}$ è un cono non convesso; il primo ortante $\R^2_+$ è un cono convesso.
+\end{defbox}
+\begin{defbox}[involucro convesso e conico]
+L'\textbf{involucro (inviluppo) convesso} $\mathrm{conv}(K)$ è l'insieme di tutte le combinazioni convesse di elementi di $K$: il più piccolo convesso che contiene $K$. L'\textbf{involucro conico} $\mathrm{cono}(K)$ è l'insieme di tutte le combinazioni coniche: il più piccolo cono convesso che contiene $K$.
+\end{defbox}
+Esempio: $\mathrm{conv}\{(0,0),(2,0),(1,2)\}$ è il triangolo pieno con quei vertici, cioè $\{x: x_2\ge0,\ x_2\le2x_1,\ x_2\le4-2x_1\}$.
+
+\subsection{Poliedri}
+\textbf{Proprietà.}
+\begin{itemize}[nosep]
+\item L'intersezione di insiemi convessi (anche infiniti) è convessa.
+\item Per $f$ lineare, $\{x: f(x)\le b\}$ è convesso per ogni $b$; $\{x\in\R^n: a^Tx\le b\}$ ($a\ne0$) è un \textbf{semispazio chiuso}.
+\end{itemize}
+\begin{defbox}[poliedro e politopo]
+Un \textbf{poliedro} in $\R^n$ è l'intersezione di un numero \emph{finito} di semispazi chiusi; equivalentemente l'insieme delle soluzioni di un sistema di $m$ disequazioni lineari, $P=\{x\in\R^n: Ax\le b\}$. Un \textbf{politopo} è un poliedro limitato.
+\end{defbox}
+Quindi \textbf{la regione ammissibile di una PL è un poliedro} (convesso e chiuso); i vincoli $x\ge0$ sono semispazi come gli altri ($-x_j\le0$), le uguaglianze sono coppie di semispazi.
+
+\emph{E con un vincolo non lineare?} In generale no: $\{x: x_1^2+x_2^2\le1\}$ è convesso ma non è un poliedro (servirebbero infiniti semispazi); $\{x: x_1^2+x_2^2\ge1\}$ non è nemmeno convesso.
+
+\textbf{Coni e poliedri.} Non tutti i coni convessi sono poliedri: il cono di secondo ordine (``gelato'') $\{x\in\R^3: x_3\ge\sqrt{x_1^2+x_2^2}\}$ è un cono convesso ma non poliedrico.
+\begin{prop}
+$P$ è un \textbf{cono poliedrico} se e solo se esiste una matrice $Q$ tale che $P=\{x\in\R^n: Qx\le0\}$ (termini noti tutti nulli).
+\end{prop}
+
+\subsection{Vertici e direzioni di recessione}
+\begin{defbox}[vertice]
+$v\in P$ è un \textbf{vertice} (punto estremo) di $P$ se non si può scrivere come combinazione convessa \emph{stretta} di due punti distinti di $P$: se $v=\lambda x+(1-\lambda)y$ con $x,y\in P$ e $\lambda\in(0,1)$, allora $x=y=v$.
+\end{defbox}
+Caratterizzazione algebrica (utile per il simplesso): in $P=\{x\in\R^n:Ax\le b\}$, $v$ è un vertice se e solo se tra i vincoli \emph{attivi} in $v$ ($a_i^Tv=b_i$) ce ne sono $n$ linearmente indipendenti. In $\R^2$: un vertice è l'intersezione di due rette di vincolo non parallele. Il coltivatore ha 6 vertici: $(0,0),(10,0),(10,2),(8,4),(4,6),(0,6)$. Il punto $(12,0)$ è intersezione di due rette di vincolo ma non è ammissibile, quindi \emph{non} è un vertice.
+
+\begin{defbox}[direzione di recessione]
+$d\ne0$ è una \textbf{direzione di recessione} di $P$ se per ogni $x\in P$ e ogni $\lambda\ge0$ si ha $x+\lambda d\in P$ (da qualunque punto ci si può muovere all'infinito lungo $d$ restando in $P$). Per $P=\{x:Ax\le b\}\neq\emptyset$: $d$ è di recessione se e solo se $Ad\le0$. L'insieme $\{d: Ad\le0\}$ è il \emph{cono di recessione}.
+\end{defbox}
+Un politopo non ha direzioni di recessione. Esempio delle slide: $P=\{x\ge0,\ x_2\le5\}$: $Ad\le0$ dà $-d_1\le0$, $-d_2\le0$, $d_2\le0$, cioè $d=(d_1,0)$ con $d_1>0$: l'unica direzione (a meno di scala) è $(1,0)$.
+
+\subsection{Teorema di decomposizione dei poliedri}
+\begin{prop}[decomposizione, Minkowski--Weyl]
+Ogni poliedro $P$ si può scrivere come
+\[ P=\mathrm{conv}\{v^1,\dots,v^m\}+\mathrm{cono}\{e^1,\dots,e^p\}, \]
+cioè ogni $x\in P$ è $x=\sum_{i}\lambda_iv^i+\sum_j\mu_je^j$ con $\lambda_i\ge0$, $\sum_i\lambda_i=1$, $\mu_j\ge0$: somma di un \textbf{politopo} e di un \textbf{cono} generato dalle direzioni di recessione. Se $P$ ha vertici, si possono prendere come $v^i$ esattamente i vertici. Vale anche il viceversa: un insieme di questa forma è un poliedro.
+\end{prop}
+(La ``somma'' è di Minkowski: $A+B=\{a+b: a\in A, b\in B\}$.) Il politopo o il cono possono essere banali: se $P$ è un politopo, $P=\mathrm{conv}(V)$ con $V$ insieme dei vertici.
+
+\begin{esbox}[decomposizioni delle slide]
+\begin{itemize}[nosep]
+\item $P_1=\{x\in\R^2: x_1\ge1,\ x_2\ge1,\ x_1+x_2\ge3\}=\mathrm{conv}\{(1,2),(2,1)\}+\mathrm{cono}\{(1,0),(0,1)\}$.
+\item $P_2=\{1\le x_1\le4,\ 1\le x_2\le3\}=\mathrm{conv}\{(1,1),(4,1),(4,3),(1,3)\}$ (politopo, cono $=\{0\}$).
+\item $P_3=\{x_1\ge0,\ 0\le x_2\le1\}=\mathrm{conv}\{(0,0),(0,1)\}+\mathrm{cono}\{(1,0)\}$.
+\item $P_4=\{0\le x_2\le1\}$ (striscia): \emph{nessun vertice} (contiene rette). $P_4=\mathrm{conv}\{(0,0),(0,1)\}+\mathrm{cono}\{(1,0),(-1,0)\}$: i punti $v^i$ esistono ma non sono vertici.
+\end{itemize}
+\end{esbox}
+Un poliedro ha almeno un vertice se e solo se non contiene rette. Ogni poliedro della forma $\{x: Ax\le b, x\ge0\}$ non vuoto (quindi ogni PL in forma canonica o standard) ha vertici.
+
+\section{Proprietà della soluzione ottima}
+
+\begin{prop}[caratterizzazione elementare dell'ottimalità]
+Dato $(P)\ \max\{c^Tx: x\in P\}$ con $P=\{x\in\R^n:Ax\le b\}$:
+\begin{enumerate}[nosep]
+\item se $c\ne0$, nessuna soluzione ottima è un punto interno di $P$;
+\item se $(P)$ ha due soluzioni ottime, allora ne ha infinite;
+\item ogni soluzione ottima locale è anche ottima globale.
+\end{enumerate}
+\end{prop}
+\begin{dimo}
+\emph{1.} Se $x^*$ è interno, esiste $\varepsilon>0$ tale che $x^*+\varepsilon c\in P$. Ma $c^T(x^*+\varepsilon c)=c^Tx^*+\varepsilon\|c\|^2>c^Tx^*$: $x^*$ non è ottima.
+\emph{2.} Se $x',x''$ sono ottime con valore $z^*$, per ogni $\lambda\in[0,1]$ il punto $\lambda x'+(1-\lambda)x''$ sta in $P$ (convesso) e ha valore $\lambda z^*+(1-\lambda)z^*=z^*$ (linearità): tutto il segmento è ottimo.
+\emph{3.} Sia $\bar x$ ottimo locale e supponiamo esista $y\in P$ con $c^Ty>c^T\bar x$. I punti $\bar x+\lambda(y-\bar x)$, $\lambda\in(0,1]$, stanno in $P$ e hanno valore $c^T\bar x+\lambda(c^Ty-c^T\bar x)>c^T\bar x$; per $\lambda$ piccolo sono vicini quanto si vuole a $\bar x$, contro la sua ottimalità locale. \hfill$\square$
+\end{dimo}
+Le proprietà 2 e 3 valgono per qualunque problema con regione convessa e obiettivo lineare (la 3 anche con obiettivo concavo da massimizzare); sono la ragione per cui la PL è ``facile'' rispetto alla PLI.
+
+\begin{prop}[Teorema fondamentale della PL]
+Sia $P=\mathrm{conv}\{v^1,\dots,v^m\}+\mathrm{cono}\{e^1,\dots,e^p\}$. Se il problema $(P)\ \max\{c^Tx: x\in P\}$ ha valore ottimo finito, allora esiste $k\in\{1,\dots,m\}$ tale che $v^k$ è una soluzione ottima.
+\end{prop}
+\begin{dimo}
+\emph{Passo 1.} $c^Te^j\le0$ per ogni $j$. Altrimenti, preso un $\bar x\in P$, i punti $\bar x+te^j$ ($t\ge0$) stanno in $P$ e $c^T(\bar x+te^j)=c^T\bar x+t\,c^Te^j\to+\infty$: il problema sarebbe illimitato.
+\emph{Passo 2.} Sia $k$ tale che $c^Tv^k=\max_ic^Tv^i$. Ogni $x\in P$ è $x=\sum_i\lambda_iv^i+\sum_j\mu_je^j$ con $\lambda\ge0$, $\sum\lambda_i=1$, $\mu\ge0$, quindi
+\[ c^Tx=\sum_i\lambda_i\,c^Tv^i+\sum_j\mu_j\,c^Te^j\ \le\ \sum_i\lambda_i\,c^Tv^i\ \le\ \Big(\sum_i\lambda_i\Big)c^Tv^k=c^Tv^k. \]
+Poiché $v^k\in P$, $v^k$ è ottimo. \hfill$\square$
+\end{dimo}
+
+\begin{oss}[conseguenze]
+\begin{itemize}[nosep]
+\item Se una PL (con vertici) ha ottimo finito, \textbf{esiste un vertice ottimo}. Basta cercare tra i vertici, che sono in numero finito: al più $\binom{m}{n}$ (scelte di $n$ vincoli attivi tra $m$).
+\item Enumerare tutti i vertici è però esponenziale. Il \textbf{simplesso} si muove invece da un vertice a uno \emph{adiacente} che migliora l'obiettivo, e si ferma quando nessun vertice adiacente migliora (per la proprietà 3, un ottimo ``locale sui vertici'' è globale).
+\item Il teorema dice che \emph{esiste} un vertice ottimo, non che tutti gli ottimi sono vertici (caso (b): anche i punti interni allo spigolo sono ottimi).
+\item Con il Passo 1: una PL ammissibile è illimitata se e solo se esiste una direzione di recessione $e$ con $c^Te>0$.
+\end{itemize}
+\end{oss}
+
+\begin{esame}
+Da saper fare: portare un problema in forma standard e canonica; risolvere graficamente un problema in 2 variabili (anche di minimo) e riconoscere i casi ottimo unico / infiniti ottimi / illimitato / inammissibile; verificare se un punto è combinazione convessa o conica di altri; dire se un punto è un vertice; trovare le direzioni di recessione ($Ad\le0$); scrivere la decomposizione $\mathrm{conv}+\mathrm{cono}$ di un poliedro in $\R^2$; enunciare e dimostrare la caratterizzazione elementare e il teorema fondamentale.
+\end{esame}

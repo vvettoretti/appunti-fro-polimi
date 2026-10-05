@@ -1,0 +1,239 @@
+\chapter{Esercitazione 1: modelli (soluzioni)}\label{cap:es}
+
+\emph{Soluzioni proposte per l'Esercitazione n.\,1 (Carello \& Pascoal). Molti esercizi ammettono formulazioni diverse ma equivalenti; qui si indica una formulazione corretta e, dove utile, il ragionamento e lo schema ricorrente. Per ogni esercizio: prova prima da solo, poi confronta. In aula (25/9) sono stati svolti gli esercizi \textbf{1, 6, 8 e 9}: sono quelli di riferimento per lo stile atteso.}
+
+%------------------------------------------------
+\section*{Es.\ 1 -- Miscelazione di benzine}\addcontentsline{toc}{section}{Es.\ 1 -- Miscelazione di benzine}
+\textbf{Insiemi/parametri}: grezzi $I=\{1,2,3,4\}$ con disponibilità $a_i$ e costo $c_i$; benzine $J=\{A,B,C\}$ con prezzo $r_j$.
+\textbf{Variabili}: $x_{ij}\ge0$ barili di grezzo $i$ usati nella benzina $j$. (La quantità prodotta di $j$ è $\sum_ix_{ij}$: non serve una variabile a parte.)
+\begin{align*}
+\max\ & \sum_{j\in J}r_j\sum_{i\in I}x_{ij}-\sum_{i\in I}c_i\sum_{j\in J}x_{ij}\\
+\st\ & \sum_{j\in J}x_{ij}\le a_i && \forall i\in I\\
+& x_{2A}\ge0.2\sum_{i}x_{iA},\qquad x_{3A}\le0.3\sum_ix_{iA} &&\text{(normale)}\\
+& x_{3B}\ge0.4\sum_ix_{iB} &&\text{(super95)}\\
+& x_{2C}\le0.5\sum_ix_{iC} &&\text{(super98)}\\
+& x_{ij}\ge0.
+\end{align*}
+Schema: \emph{blending} (\S\ref{sec:blending}). Le percentuali si linearizzano moltiplicando per il totale della miscela.
+
+%------------------------------------------------
+\section*{Es.\ 2 -- Turni in ospedale}\addcontentsline{toc}{section}{Es.\ 2 -- Turni in ospedale}
+Giorni $D=\{1,\dots,7\}$ (Lun$=1$), richiesta $r_k$.
+\textbf{Idea chiave}: la variabile ``numero di infermieri in servizio il giorno $k$'' non basta, perché non garantisce i 5 giorni consecutivi. Si decide invece \textbf{quando inizia} il turno:
+$x_j\in\Z_{\ge0}$ = numero di infermieri che iniziano i 5 giorni lavorativi il giorno $j$.
+Il giorno $k$ lavorano quelli che hanno iniziato in $k,k-1,\dots,k-4$ (ciclicamente, modulo 7):
+\[ \min\sum_{j\in D}x_j\qquad\st\ \sum_{j\in D_k}x_j\ge r_k\ \ \forall k\in D,\qquad x_j\in\Z_{\ge0}\ \ \forall j\in D, \]
+dove $D_k=\{k,k-1,k-2,k-3,k-4\}$ con indici presi ciclicamente (modulo 7).
+Ad esempio lunedì: $x_{\text{Gio}}+x_{\text{Ven}}+x_{\text{Sab}}+x_{\text{Dom}}+x_{\text{Lun}}\ge11$ (equivalentemente $\sum_jx_j-x_{\text{Mar}}-x_{\text{Mer}}\ge 11$).
+\textbf{Soluzione}: ottimo intero 14 infermieri (es.\ $x=(6,3,0,4,1,0,0)$); il rilassamento continuo vale $13.\overline3$, quindi l'interezza conta davvero.
+
+%------------------------------------------------
+\section*{Es.\ 3 -- Posizionamento di ambulanze}\addcontentsline{toc}{section}{Es.\ 3 -- Posizionamento di ambulanze}
+Punti di richiesta $I$, siti $J$, tempi $t_{ij}$; $a_{ij}=1$ se $t_{ij}\le8$ minuti (parametro calcolato dai dati). $y_j\in\{0,1\}$: ambulanza in $j$.
+\[ \min\sum_{j\in J}y_j\qquad\st\ \sum_{j\in J}a_{ij}y_j\ge1\ \ \forall i\in I,\qquad y_j\in\{0,1\}. \]
+Set covering. Nota: la soglia degli 8 minuti non va messa come vincolo sulle variabili, ma usata per \emph{pre-calcolare} $a_{ij}$ (oppure si somma solo su $j$ con $t_{ij}\le 8$).
+
+%------------------------------------------------
+\section*{Es.\ 4 -- Gestione dei rifiuti}\addcontentsline{toc}{section}{Es.\ 4 -- Gestione dei rifiuti}
+\textbf{Variabili} (tonnellate, $\ge0$): $x_{ij}$ da sito $i$ a discarica $j$; $u_{ih}$ da sito $i$ a centro $h$; $v_{hj}$ scarti da centro $h$ a discarica $j$; $z_h$ materiale da $h$ al riciclaggio $r$; $y_h\in\{0,1\}$ costruisco il centro $h$.
+\begin{align*}
+\min\ & \sum_hf_hy_h+\sum_h p_h\sum_iu_{ih}+\sum_jb_j\Big(\sum_ix_{ij}+\sum_hv_{hj}\Big)+{}\\
+&\quad\sum_{i,j}c_{ij}x_{ij}+\sum_{i,h}c_{ih}u_{ih}+\sum_{h,j}c_{hj}v_{hj}+\sum_hc_{hr}z_h-g\sum_hz_h\\
+\st\ & \sum_jx_{ij}+\sum_hu_{ih}=t_i && \forall i\in I\\
+& \sum_iu_{ih}\le q_hy_h && \forall h\in H\\
+& z_h=0.8\sum_iu_{ih},\qquad \sum_jv_{hj}=0.2\sum_iu_{ih} && \forall h\in H\\
+& \sum_ix_{ij}+\sum_hv_{hj}\le d_j && \forall j\in D
+\end{align*}
+Vincoli nell'ordine: tutti i rifiuti vanno smaltiti; capacità del centro (solo se costruito); bilanci del centro (80\% riciclato, 20\% in discarica), capacità delle discariche. Qui $p_h$ è inteso come costo di lavorazione per tonnellata trattata. Schema: \emph{flussi con bilanciamento} + \emph{costo fisso} con capacità ($\sum u\le q_hy_h$ fa da big-$M$ con $M=q_h$).
+
+%------------------------------------------------
+\section*{Es.\ 5 -- Linea ferroviaria}\addcontentsline{toc}{section}{Es.\ 5 -- Linea ferroviaria}
+Il segmento $[0,L]$ contiene infiniti punti: bisogna \textbf{discretizzare}. L'antenna $i$ copre $[d_i-5,d_i+5]$. Siano $0=\pi_0<\pi_1<\dots<\pi_K=L$ i punti distinti dell'insieme $\{0,L\}\cup\{d_i\pm5\}\cap[0,L]$ ordinati. Dentro ogni intervallo elementare $(\pi_k,\pi_{k+1})$ nessuna antenna ``inizia'' o ``finisce'', quindi l'insieme delle antenne che lo coprono è lo stesso per tutti i suoi punti: basta controllare il punto medio $m_k$. Parametro $a_{ik}=1$ se $|d_i-m_k|\le5$.
+\[ \min\sum_{i=1}^nx_i\qquad\st\ \sum_{i=1}^na_{ik}x_i\ge1\ \ \forall k=0,\dots,K-1,\qquad x_i\in\{0,1\}. \]
+(Una classe di variabili, una classe di vincoli, come suggerito. Gli estremi $\pi_k$ sono coperti perché gli intervalli di copertura sono chiusi.)
+\textbf{Variante} con capacità: $\sum_ia_{ik}c_ix_i\ge C\ \ \forall k$.
+
+%------------------------------------------------
+\section*{Es.\ 6 -- Manutenzione stradale}\addcontentsline{toc}{section}{Es.\ 6 -- Manutenzione stradale}
+Grafo $G=(V,E)$ delle città e strade, $x_i\in\{0,1\}$ = ufficio in $i$. $E_L=\{\{i,j\}\in E: l_{ij}>L\}$.
+\[ \min\sum_{i\in V}x_i\quad\st\ x_i+x_j\ge1\ \ \forall\{i,j\}\in E\setminus E_L;\qquad x_i+x_j\ge 2\ \ (\text{cioè }x_i=x_j=1)\ \ \forall\{i,j\}\in E_L. \]
+È un \emph{vertex cover} con alcuni nodi forzati.
+\textbf{Variante} (ogni ufficio gestisce al più 3 strade): serve sapere \emph{chi} gestisce ogni strada. $w_{ei}\in\{0,1\}$ per $e\in E$, $i\in e$: la strada $e$ è gestita dall'ufficio in $i$.
+\[ \sum_{i\in e}w_{ei}\ge1\ \ \forall e\in E;\qquad w_{ei}\le x_i;\qquad \sum_{e\ni i}w_{ei}\le 3x_i\ \ \forall i\in V;\qquad w_{ei}=1\ \ \forall e\in E_L,\ i\in e. \]
+(L'ultimo vincolo interpreta ``incluse quelle lunghe'': una strada lunga è gestita da entrambi gli uffici e conta per entrambi; esso implica anche $x_i=1$ per gli estremi delle strade lunghe.)
+
+%------------------------------------------------
+\section*{Es.\ 7 -- Carte da gioco}\addcontentsline{toc}{section}{Es.\ 7 -- Carte da gioco}
+Carte $C=\{1,\dots,n\}$, simboli candidati $S=\{1,\dots,\bar S\}$ con $\bar S$ limite superiore (es.\ $\bar S=nk$).
+Variabili: $x_{cs}\in\{0,1\}$ simbolo $s$ sulla carta $c$; $u_s\in\{0,1\}$ simbolo $s$ usato; $z_{cc's}\in\{0,1\}$ ($c<c'$) simbolo $s$ comune a $c$ e $c'$ (AND linearizzato).
+\begin{align*}
+\min\ & q=\sum_{s\in S}u_s\\
+\st\ & \sum_sx_{cs}=k && \forall c\\
+& x_{cs}\le u_s && \forall c,s\\
+& z_{cc's}\le x_{cs},\quad z_{cc's}\le x_{c's},\quad z_{cc's}\ge x_{cs}+x_{c's}-1 && \forall c<c',\ s\\
+& \sum_sz_{cc's}=1 && \forall c<c'.
+\end{align*}
+\textbf{Variante} ($\bar q$ simboli dati, massimizzare le carte): carte potenziali $c\in\{1,\dots,\bar N\}$ con $v_c\in\{0,1\}$ = carta creata; $\sum_{s=1}^{\bar q}x_{cs}=kv_c$; $\sum_sz_{cc's}\ge v_c+v_{c'}-1$ e $\sum_sz_{cc's}\le 1$; $\max\sum_cv_c$. (Se una carta non è creata non ha simboli, quindi le $z$ che la coinvolgono valgono 0.)
+
+%------------------------------------------------
+\section*{Es.\ 8 -- Il pastificio}\addcontentsline{toc}{section}{Es.\ 8 -- Il pastificio}
+$T=\{1,\dots,|T|\}$; $x_t\ge0$ quintali prodotti; $s_t\ge0$ scorta a fine giorno ($s_0=0$); $y_t\in\{0,1\}$ macchine attive.
+\begin{align*}
+\min\ & \sum_{t\in T}(Sy_t+c_tx_t+gs_t)\\
+\st\ & s_{t-1}+x_t=d_t+s_t && \forall t\in T\\
+& qy_t\le x_t\le Qy_t && \forall t\in T\\
+& 0\le s_t\le B && \forall t\in T,\qquad s_0=0.
+\end{align*}
+Lot sizing: bilanciamento + lotto minimo + costo fisso.
+
+%------------------------------------------------
+\section*{Es.\ 9 -- Dirigente scolastico}\addcontentsline{toc}{section}{Es.\ 9 -- Dirigente scolastico}
+$y_j\in\{0,1\}$ attivo il corso $j$.
+\[ \min\sum_{j\in C}g_jy_j\qquad\st\ \sum_{j\in f_i\cup s_i}y_j\ge1\ \ \forall i\in I. \]
+\textbf{Variante}: $z_i\in\{0,1\}$ = lo studente $i$ ha almeno una prima scelta attiva. $z_i\le\sum_{j\in f_i}y_j\ \forall i$ e $\sum_iz_i\ge0.5|I|$. Basta la direzione ``$z_i=1\Rightarrow$ almeno una prima scelta'': il vincolo sul 50\% spinge le $z$ verso 1, non serve impedire che valgano 0.
+
+%------------------------------------------------
+\section*{Es.\ 10 -- Doni natalizi}\addcontentsline{toc}{section}{Es.\ 10 -- Doni natalizi}
+Pacchi potenziali $K=\{1,\dots,\bar K\}$ con $\bar K=\lfloor\sum_iv_i/V\rfloor$ (o semplicemente $n$). $x_{ik}\in\{0,1\}$ oggetto $i$ nel pacco $k$; $y_k\in\{0,1\}$ pacco $k$ confezionato.
+\[ \max\sum_ky_k\quad\st\ \sum_kx_{ik}\le1\ \forall i;\qquad \sum_iv_ix_{ik}\ge Vy_k\ \forall k. \]
+(Un pacco non ``attivo'' può contenere oggetti senza problemi: semplicemente non conta.)
+\textbf{Variante}: $x_{ik}+x_{jk}\le1\ \ \forall(i,j)\in A,\ \forall k\in K$.
+
+%------------------------------------------------
+\section*{Es.\ 11 -- Setup di robot}\addcontentsline{toc}{section}{Es.\ 11 -- Setup di robot}
+$x_{ij}\ge0$ unità del prodotto $i$ sul robot $j$ (intere se i prodotti sono indivisibili); $y_{ij}\in\{0,1\}$ setup di $j$ per $i$; $z$ produzione della tipologia meno prodotta.
+\begin{align*}
+\max\ & z\\
+\st\ & z\le\sum_jx_{ij} && \forall i &&\text{(max-min)}\\
+& \sum_ia_{ij}x_{ij}\le b_j && \forall j\\
+& x_{ij}\le \tfrac{b_j}{a_{ij}}\,y_{ij} && \forall i,j &&\text{(big-$M$ con $M=b_j/a_{ij}$)}\\
+& \sum_ir_i\sum_jx_{ij}-\sum_{i,j}c_{ij}y_{ij}\ge B &&&&\text{(ritorno minimo)}
+\end{align*}
+
+%------------------------------------------------
+\section*{Es.\ 12 -- Azienda dolciaria}\addcontentsline{toc}{section}{Es.\ 12 -- Azienda dolciaria}
+Mesi $I=\{1,\dots,|I|\}$. Variabili: $p_{ik}\in\Z_{\ge0}$ cioccolatini $k$ prodotti nel mese $i$; $s_{ik}\ge0$ scorta a fine mese ($s_{0k}=0$); $o_i\ge0$ minuti di straordinario; $w_i\in\{0,1\}$ straordinari attivati; $n_j\in\Z_{\ge0}$ confezioni di materia prima $j$ acquistate.
+\begin{align*}
+\min\ & \sum_{i,k}c_kp_{ik}+\sum_jp_jn_j+\sum_if_iw_i+\sum_{i,k}g_ks_{ik}\\
+\st\ & s_{i-1,k}+p_{ik}=d_{ik}+s_{ik} && \forall i,k\\
+& \sum_kh_kp_{ik}\le Q+o_i && \forall i\\
+& o_i\le 60S\,w_i && \forall i &&(S\text{ in ore}, Q\text{ in minuti})\\
+& v_jn_j\ge\sum_{i,k}a_{kj}p_{ik} && \forall j &&\text{(acquisto a inizio periodo)}\\
+& \sum_iw_i\le b,\qquad w_i+w_{i+1}\le1 && \forall i<|I|
+\end{align*}
+
+%------------------------------------------------
+\section*{Es.\ 13 -- Localizzazione di discariche}\addcontentsline{toc}{section}{Es.\ 13 -- Localizzazione di discariche}
+Aree $A=\{1,\dots,10\}$, città $K=\{1,\dots,7\}$, $N_c\subseteq A$ aree vicine alla città $c$ (dalla tabella). $y_a\in\{0,1\}$ costruisco in $a$.
+\begin{align*}
+\max\ & \sum_aw_ay_a\\
+\st\ & \sum_{a\in N_c}y_a\le1 && \forall c\in K\\
+& y_2\le y_7;\qquad y_1+y_2\le1;\qquad y_1+y_4\le1\\
+& \sum_ag_ay_a\le25.
+\end{align*}
+Con i dati della tabella l'ottimo è $\{4,9\}$ con capacità 1290 (costo 12). Il vincolo di vicinanza è molto restrittivo: le città 1, 2, 4 e 7 ``vedono'' molte aree.
+
+%------------------------------------------------
+\section*{Es.\ 14 -- Matrimonio}\addcontentsline{toc}{section}{Es.\ 14 -- Matrimonio}
+Invitati $P$, gruppi $G_1,\dots,G_k$, tavoli potenziali $T$ ($|T|=\lceil|P|/p\rceil$ o più). Variabili: $x_{it}\in\{0,1\}$ invitato $i$ al tavolo $t$; $y_t\in\{0,1\}$ tavolo usato; $u_{gt}\in\{0,1\}$ gruppo $g$ presente al tavolo $t$.
+\begin{align*}
+\min\ & \sum_ty_t\\
+\st\ & \sum_tx_{it}=1 && \forall i\\
+& \sum_ix_{it}\le p\,y_t && \forall t\\
+& u_{gt}\le\sum_{i\in G_g}x_{it} && \forall g,t\\
+& \sum_gu_{gt}\ge q\,y_t && \forall t &&\text{(eterogeneità)}\\
+& \sum_{j\in G_g\setminus\{i\}}x_{jt}\ge r\,x_{it} && \forall g,\ i\in G_g,\ t &&\text{(almeno $r$ compagni)}
+\end{align*}
+\textbf{Variante}: $\min z$ con $z\ge\sum_{i\in G_g}x_{it}\ \forall g,t$ (min-max), eliminando l'obiettivo sul numero di tavoli (i vincoli su $y$ restano per definire i tavoli usati).
+
+%------------------------------------------------
+\section*{Es.\ 15 -- Instradamento di pacchetti}\addcontentsline{toc}{section}{Es.\ 15 -- Instradamento di pacchetti}
+$x_{i1},x_{i2}\in\{0,1\}$: pacchetto $i$ sul link 1 / 2; $r_i$ risorse, $c_i$ costo sul link 1.
+\[ \min\sum_i\big(c_ix_{i1}+1.3c_ix_{i2}\big)\quad\st\ x_{i1}+x_{i2}=1\ \forall i;\quad \sum_ir_ix_{i1}\le1;\quad\sum_ir_ix_{i2}\le2. \]
+\textbf{Soluzione}: sul link 1 vanno i pacchetti $\{4,6,8,10\}$ (0.6+0.2+0.1+0.1 = 1 Mbps, costo 1400), il resto sul link 2 (1.7 Mbps): costo totale 3610. Ragionamento: costo $=1.3\sum_ic_i-0.3\sum_{i\in\text{link 1}}c_i$, quindi si risolve uno \emph{zaino} che massimizza il costo messo sul link 1.
+\textbf{Variante} con $m$ link: $x_{il}$, $\sum_lx_{il}=1\ \forall i$, $\sum_ir_ix_{il}\le k_l\ \forall l$, costo $c_{il}$.
+
+%------------------------------------------------
+\section*{Es.\ 16 -- Fabbrica di bulloni}\addcontentsline{toc}{section}{Es.\ 16 -- Fabbrica di bulloni}
+$x_i\in[p,q]$ produzione del mese $i$; $s_i\ge0$ giacenza a fine mese ($s_0=m_0$); $y_i\in\{0,1\}$ magazzino raddoppiato nel mese $i$.
+\[ \min\sum_i(r\,s_i+f\,y_i)\quad\st\ s_{i-1}+x_i=d_i+s_i,\quad s_i\le M+My_i,\quad p\le x_i\le q,\quad s_i\ge0. \]
+(Se il costo $r$ si paga sulla giacenza media o iniziale, cambia solo l'indice nell'obiettivo.)
+
+Sia $D_t=\sum_{i\le t}d_i$. La giacenza a fine mese $t$ è $s_t=m_0+\sum_{i\le t}x_i-D_t\in[m_0+tp-D_t,\ m_0+tq-D_t]$.
+\begin{itemize}[nosep]
+\item \textbf{Condizione sufficiente di inammissibilità}: esiste $t$ con $m_0+tq<D_t$ (anche producendo al massimo non si soddisfa la domanda) oppure $m_0+tp-D_t>2M$ (anche producendo al minimo il magazzino esplode). Caso più semplice: $d_1>m_0+q$.
+\item \textbf{Condizione necessaria di ammissibilità}: la negazione della precedente, $m_0+tq\ge D_t$ e $m_0+tp-D_t\le2M$ per ogni $t$ (in particolare $m_0+nq\ge D_n$).
+\end{itemize}
+
+%------------------------------------------------
+\section*{Es.\ 17 -- Rete di distribuzione}\addcontentsline{toc}{section}{Es.\ 17 -- Rete di distribuzione}
+$y_j\in\{0,1\}$ costruisco il centro $j$; $x_{ij}\in\{0,1\}$ negozio $i$ collegato a $j$.
+\[ \min\sum_jc_jy_j+\sum_{i,j}\alpha d_{ij}x_{ij}\quad\st\ \sum_jx_{ij}\ge1\ \forall i;\quad 2y_j\le\sum_ix_{ij}\le k\,y_j\ \forall j. \]
+Il vincolo destro impone anche $x_{ij}=0$ se $y_j=0$.
+\textbf{Variante}: nuova variabile $z$ e nuovi vincoli $z\ge d_{ij}x_{ij}\ \forall i,j$; obiettivo $\min z$.
+
+%------------------------------------------------
+\section*{Es.\ 18 -- Ambulanze}\addcontentsline{toc}{section}{Es.\ 18 -- Ambulanze}
+$x_{ij}\in\{0,1\}$ città $i$ assegnata all'ospedale $j$; livello di servizio di $j$: $\sum_it_{ij}x_{ij}$.
+\begin{enumerate}[nosep]
+\item $\min z$ con $z\ge\sum_it_{ij}x_{ij}\ \forall j$ e $\sum_jx_{ij}=1\ \forall i$.
+\item $\min\sum_j\sum_it_{ij}x_{ij}$ con gli stessi vincoli: il problema si separa per città e l'ottimo assegna ogni città all'\emph{ospedale più vicino}.
+\item Nella figura (coordinate sulla griglia): città $C_1=(3,4)$, $C_2=(1,2)$, $C_3=(1,1)$; ospedali $H_1=(4,4)$, $H_2=(2,2)$, $H_3=(3,1)$.
+\emph{Min-max}: $C_1\to H_1$, $C_2\to H_2$, $C_3\to H_3$, livelli $1,1,2$: \textbf{obiettivo 2}.
+\emph{Totale}: ciascuna al più vicino, $C_1\to H_1$, $C_2\to H_2$, $C_3\to H_2$ (distanza $\sqrt2$): \textbf{obiettivo $2+\sqrt2\approx3.41$} (e un livello massimo di $1+\sqrt2\approx2.41$ per $H_2$).
+\end{enumerate}
+Morale: il min-max ``bilancia'', il min-somma ``efficienta''.
+
+%------------------------------------------------
+\section*{Es.\ 19 -- Medici di base}\addcontentsline{toc}{section}{Es.\ 19 -- Medici di base}
+$x_{ij}\in\{0,1\}$ per $j\in m_i$.
+\begin{enumerate}[nosep]
+\item $\max\sum_i\sum_{j\in m_i}r_{ij}x_{ij}$ con $\sum_{j\in m_i}x_{ij}=1\ \forall i$ e $\sum_{i:j\in m_i}w_ix_{ij}\le W\ \forall j$.
+\item $\sum_j\sum_i\alpha r_{ij}x_{ij}=\alpha\cdot$ (obiettivo del punto 1): stessi vincoli, obiettivo moltiplicato per una costante positiva $\Rightarrow$ \textbf{stesse soluzioni ottime}. La soluzione non è necessariamente diversa (sommare per medici o per pazienti è la stessa doppia somma).
+\item $\max z$ con $z\le\sum_{j\in m_i}r_{ij}x_{ij}\ \forall i$.
+\item $\max z$ con $z\le\sum_i\alpha r_{ij}x_{ij}\ \forall j$: ora il minimo è preso sui \emph{medici} (somme per colonna) e non sui pazienti. Il $\min$ non commuta con la somma, quindi in generale la soluzione ottima è \textbf{diversa}.
+\end{enumerate}
+
+%------------------------------------------------
+\section*{Es.\ 20 -- Rete stradale}\addcontentsline{toc}{section}{Es.\ 20 -- Rete stradale}
+$x_i\in\{0,1\}$ rotonda nell'incrocio $i$; $E_5=\{\{i,j\}: t_{ij}\ge5\}$.
+\begin{enumerate}[nosep]
+\item $\min\sum_ix_i$ con $x_i+x_j\ge1\ \forall\{i,j\}\in E_5$ (vertex cover sui lati ``trafficati'').
+Lati con $t\ge5$: $ha(10),ab(6),ae(5),ad(7),dg(12),hb(8),bc(5),ef(5),fg(6)$. Ottimo: \textbf{4 rotonde}, es.\ $\{a,b,e,g\}$ oppure $\{a,b,d,f\}$.
+\item Variante: $x_i=x_j=1$ (cioè $x_i+x_j\ge2$) per ogni lato con $t_{ij}\ge8$: $ha(10),hb(8),dg(12)$. Ottimo $\{a,b,d,g,h\}$, 5 rotonde.
+\end{enumerate}
+
+%------------------------------------------------
+\section*{Es.\ 21 -- Baguette}\addcontentsline{toc}{section}{Es.\ 21 -- Baguette}
+$n_{1i},n_{2i}\in\Z_{\ge0}$: lotti da 20 e da 50 il giorno $i$; $z_{1i},z_{2i}\in\{0,1\}$: si produce quel tipo di lotto.
+\begin{align*}
+\min\ & \sum_i(c_1z_{1i}+c_2z_{2i}+d_1n_{1i}+d_2n_{2i})\\
+\st\ & 20n_{1i}+50n_{2i}\ge r_i && \forall i\\
+& n_{1i}\le\lceil r_i/20\rceil z_{1i},\qquad n_{2i}\le\lceil r_i/50\rceil z_{2i} && \forall i
+\end{align*}
+(Nessun magazzino: la baguette si vende in giornata. Le $M$ sono i numeri massimi sensati di lotti.)
+\begin{enumerate}[nosep,start=2]
+\item $z_{1i}+z_{2i}\le1\ \ \forall i$.
+\item $z_{2i}+z_{2,i+1}+z_{2,i+2}+z_{2,i+3}\le3\ \ \forall i=1,\dots,7$ (su 4 giorni consecutivi al più 3 di produzione da 50).
+\end{enumerate}
+
+%------------------------------------------------
+\section*{Es.\ 22 -- Asili nido}\addcontentsline{toc}{section}{Es.\ 22 -- Asili nido}
+$y_j\in\{0,1\}$ nido nel paese $j$; $x_{ij}\in\{0,1\}$ bambini di $i$ assegnati a $j$, definite solo per $t_{ij}\le\Delta$ (insieme $A$); $e_j\in\Z_{\ge0}$ educatori in $j$.
+\begin{align*}
+\min\ & \sum_{(i,j)\in A,\ i\ne j}c_{ij}x_{ij}+g\sum_je_j\\
+\st\ & \sum_{j:(i,j)\in A}x_{ij}=1 && \forall i\\
+& x_{ij}\le y_j && \forall(i,j)\in A\\
+& \sum_jy_j\le p\\
+& q\,e_j\ge\sum_{i:(i,j)\in A}b_ix_{ij} && \forall j &&(e_j\ge \text{bambini}/q\text{, intero})
+\end{align*}
+\textbf{Variante}: $\sum_ib_ix_{ij}\ge r\,y_j\ \forall j$; $y_j+y_l\le1$ per ogni coppia $j\neq l$ con $t_{jl}<\delta$.
+
+%------------------------------------------------
+\section*{Es.\ 23 -- Problema su grafo}\addcontentsline{toc}{section}{Es.\ 23 -- Problema su grafo}
+\begin{enumerate}[nosep]
+\item \textbf{Insieme indipendente massimo}: $\max\sum_ix_i$, $x_i+x_j\le1\ \forall\{i,j\}\in E$.
+\item \textbf{Vertex cover minimo}: $\min\sum_ix_i$, $x_i+x_j\ge1\ \forall\{i,j\}\in E$.
+\end{enumerate}
+Relazione: $S$ è indipendente se e solo se $V\setminus S$ è un vertex cover (sostituisci $x_i\to1-x_i$). Quindi $|S^*|+|T^*|=|V|$.
+Figura 1 (casa: pentagono con tetto e diagonale): indipendente massimo di cardinalità 2 (es.\ il vertice in alto e quello in basso a sinistra); vertex cover minimo di cardinalità 3 (i tre restanti). Figura 2 (pentagono con tutte le diagonali $=K_5$): indipendente massimo 1 (un vertice qualsiasi), vertex cover minimo 4.

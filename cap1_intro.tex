@@ -1,0 +1,199 @@
+\chapter{Introduzione alla Ricerca Operativa}
+
+\section{Che cos'è la Ricerca Operativa}
+
+La \textbf{Ricerca Operativa} (RO, in inglese \emph{Operations Research} o \emph{Management Science}) è la disciplina che fornisce metodi quantitativi e tecniche matematiche (ottimizzazione, teoria dei giochi, simulazione) per risolvere \emph{problemi decisionali complessi} in cui si devono:
+\begin{itemize}[nosep]
+  \item gestire \textbf{risorse limitate} (non tutte le scelte sono accettabili);
+  \item tenere conto di un \textbf{obiettivo} per valutare la bontà delle diverse soluzioni;
+  \item \textbf{selezionare} una tra le molte alternative così da ottimizzare l'obiettivo.
+\end{itemize}
+È una ``scienza di supporto alle decisioni'', all'incrocio tra matematica applicata, informatica, economia e ingegneria gestionale. Nasce durante la II Guerra Mondiale (``research on operations'': posizionamento dei radar, logistica militare) e poi si diffonde in ambito industriale e sociale.
+
+Alcune date da conoscere (non serve impararle a memoria, ma danno il quadro): metodo del simplesso (G.\ Dantzig, 1947); algoritmo di Bellman--Ford per cammini minimi (1956--58); algoritmo di Ford--Fulkerson per il flusso massimo (1956); piani di taglio di Gomory (metà anni '50); algoritmo di Duan et al.\ (2025) per il cammino minimo, che batte Dijkstra in certi regimi.
+
+Esempi tipici: turnazione del personale ospedaliero, percorso più breve su una rete stradale, gestione di un portafoglio di investimenti, pianificazione delle sale operatorie.
+
+\subsection{Il processo di ottimizzazione}
+
+\begin{center}
+\begin{tikzpicture}[node distance=0.9cm and 0.7cm, box/.style={draw,rounded corners,fill=blue!6,minimum width=2.0cm,minimum height=0.8cm,font=\small}, >=Stealth]
+\node[box] (p) {Problema};
+\node[box,right=of p] (m) {Modello};
+\node[box,right=of m] (a) {Metodo di soluzione};
+\node[box,right=of a] (s) {Soluzione};
+\node[box,below=of s] (i) {Implementazione};
+\node[box,below=of m] (f) {Feedback esperti};
+\draw[->] (p)--(m); \draw[->] (m)--(a); \draw[->] (a)--(s); \draw[->] (s)--(i);
+\draw[->] (i)--(f); \draw[->] (f)--(p);
+\end{tikzpicture}
+\end{center}
+\begin{enumerate}[nosep]
+  \item si definisce il problema da modellare;
+  \item lo si rappresenta con un \textbf{modello matematico} (formulazione in Programmazione Matematica);
+  \item lo si risolve con tecniche di ottimizzazione;
+  \item si analizza la soluzione con gli esperti del dominio: risponde alle loro esigenze? Se no, si torna al modello (vincoli dimenticati, obiettivo sbagliato, dati imprecisi\ldots).
+\end{enumerate}
+
+\section{Un esempio applicativo: le sale operatorie}\label{sec:sale}
+
+\textbf{Problema.} Ci sono 10 pazienti in lista d'attesa, 2 giorni, 2 sale operatorie aperte dalle 7 alle 15 (8 ore). Si hanno quindi $2\times 2 = 4$ \emph{sedute operatorie} (blocchi giorno--sala) da 8 ore. Le durate degli interventi sono:
+
+\begin{center}
+\begin{tabular}{@{}l*{10}{c}@{}}
+\toprule
+Paziente & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10\\
+Durata (ore) & 3 & 3 & 3.5 & 4 & 4.5 & 3 & 5 & 6 & 5.5 & 6\\
+\bottomrule
+\end{tabular}
+\end{center}
+\emph{Quanti pazienti riusciamo a operare al massimo? E come dimostriamo che è il miglior risultato possibile?}
+
+Provando ``a mano'' si trova facilmente una soluzione con 7 pazienti, ma per \emph{dimostrare} che non si può fare di meglio serve un ragionamento (o un modello e un solutore). Il modello risponde a tre domande:
+\begin{center}
+\begin{tabular}{@{}lcl@{}}
+\toprule
+\textbf{Problema} & & \textbf{Modello}\\ \midrule
+Descrizione dei dati & $\to$ & insiemi e parametri\\
+Cosa dobbiamo decidere? & $\to$ & variabili decisionali\\
+Che requisiti rispettare? & $\to$ & vincoli\\
+Come valutiamo le scelte? & $\to$ & funzione obiettivo\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Forma ``esplicita''.} Decidiamo a quale seduta assegnare ogni paziente: $x_{\text{paz}}^{\text{giorno,sala}}\in\{0,1\}$ vale 1 se il paziente è operato in quel giorno e in quella sala. Vincoli: ogni paziente al più una volta,
+\[ x_{1}^{g1,s1}+x_{1}^{g1,s2}+x_{1}^{g2,s1}+x_{1}^{g2,s2}\le 1 \quad(\text{e così per ogni paziente}),\]
+e non superare le 8 ore di ogni seduta,
+\[ 3x_1^{g1,s1}+3x_2^{g1,s1}+3.5x_3^{g1,s1}+\dots+6x_{10}^{g1,s1}\le 8 \quad(\text{e così per ogni seduta}).\]
+Obiettivo: massimizzare il numero di pazienti operati, cioè la somma di tutte le $x$.
+
+\paragraph{Forma parametrica.} Scrivere i vincoli uno a uno è scomodo e lega il modello a \emph{quella} istanza. Generalizziamo:
+\begin{itemize}[nosep]
+  \item $I$: insieme dei pazienti; $J$: insieme delle sedute operatorie;
+  \item $t_i$: durata prevista dell'intervento del paziente $i\in I$; $\gamma_j$: durata della seduta $j\in J$;
+  \item $x_{ij}\in\{0,1\}$: vale 1 se il paziente $i$ è assegnato alla seduta $j$.
+\end{itemize}
+\begin{modello}{Modello delle sale operatorie (forma parametrica)}
+\begin{align*}
+\max\ & \sum_{i\in I}\sum_{j\in J} x_{ij} && \text{(n.\ pazienti operati)}\\
+\st\ & \sum_{j\in J} x_{ij}\le 1 && \forall i\in I \quad\text{(ogni paziente al più una volta)}\\
+& \sum_{i\in I} t_i x_{ij}\le \gamma_j && \forall j\in J \quad\text{(capacità di ogni seduta)}\\
+& x_{ij}\in\{0,1\} && \forall i\in I,\ j\in J
+\end{align*}
+\end{modello}
+Nota: $\sum_{j} x_{ij}$ vale 1 se e solo se $i$ è operato, quindi la doppia sommatoria conta i pazienti operati. Il modello è di \textbf{Programmazione Lineare Intera} (binaria).
+
+\begin{esbox}[perché la risposta è 7]
+Una soluzione con 7 pazienti: seduta A $=\{5\}$ (4.5\,h), B $=\{1,7\}$ (8\,h), C $=\{2,4\}$ (7\,h), D $=\{3,6\}$ (6.5\,h). \\
+\textbf{Non si può fare 8.} I pazienti con durata $\ge 5.5$ (cioè 8, 9, 10) non possono condividere la seduta con nessun altro, perché resterebbero al più $2.5$\,h e l'intervento più breve dura 3\,h. I pazienti ``piccoli'' (durata $\le 5$) sono solo 7: $\{1,2,3,4,5,6,7\}$, con durata totale $3+3+3.5+4+4.5+3+5=26$.
+\begin{itemize}[nosep]
+\item Se tra gli 8 operati c'è esattamente un paziente ``grande'', occupa una seduta da solo; gli altri 7 sono tutti i piccoli (26 ore) e dovrebbero stare in 3 sedute ($24$ ore): impossibile.
+\item Con 2 grandi: 6 piccoli in 2 sedute (16 ore), ma i 6 piccoli più brevi durano già $21$ ore: impossibile. Con 3 grandi: 5 piccoli in una seduta: impossibile.
+\end{itemize}
+Quindi l'ottimo vale 7. Questo tipo di argomento (trovare una soluzione \emph{e} un limite superiore che coincidono) è esattamente ciò che fanno, in modo sistematico, gli algoritmi che vedremo.
+\end{esbox}
+
+\section{Definizioni fondamentali}\label{sec:def}
+
+Un \textbf{problema di ottimizzazione} è
+\[ \min\{f(x): x\in X\}\quad\text{oppure}\quad \max\{f(x):x\in X\},\]
+dove $X$ è l'insieme delle soluzioni ammissibili e $f$ la funzione obiettivo. ``s.t.'' (\emph{subject to}) separa l'obiettivo dai vincoli. Nel corso consideriamo spesso la forma
+\[ (P)\qquad \max\ c^T x\quad \st\ Ax\le b,\ x\ge 0. \]
+
+\begin{defbox}[soluzione e regione ammissibile]
+Assegnando un valore alle variabili si ottiene una \emph{soluzione}. $\bar x$ è una \textbf{soluzione ammissibile} di $(P)$ se soddisfa tutti i vincoli: $A\bar x\le b$ e $\bar x\ge 0$. L'insieme delle soluzioni ammissibili $X=\{x: Ax\le b,\ x\ge 0\}$ è la \textbf{regione ammissibile}.
+\end{defbox}
+
+\begin{defbox}[soluzione ottima]
+$x^*\in X$ è una \textbf{soluzione (globalmente) ottima} per un problema di massimo se $c^Tx^*\ge c^Tx$ per ogni $x\in X$; per un problema di minimo se $c^Tx^*\le c^Tx$ per ogni $x\in X$. Il valore $c^Tx^*$ è il \textbf{valore ottimo}.
+\end{defbox}
+
+Nell'esempio delle sale operatorie
+$X=\big\{x: \sum_{j}x_{ij}\le 1\ \forall i;\ \sum_i t_ix_{ij}\le \gamma_j\ \forall j;\ x_{ij}\in\{0,1\}\big\}$ e $x^*$ è ottima se $\sum_{i,j}x^*_{ij}\ge \sum_{i,j}x_{ij}$ per ogni $x\in X$.
+
+\begin{oss}[cosa può succedere]
+\begin{itemize}[nosep]
+\item \textbf{Ottimo non unico}: si parla di \emph{una} soluzione ottima, non \emph{la}. Il \emph{valore} ottimo invece è unico. Es.: $\min\{x^4-x^2\}$ ha ottimi $x=\pm\frac{\sqrt2}{2}$, entrambi di valore $-\tfrac14$. Nelle sale operatorie esistono molte assegnazioni diverse con 7 pazienti.
+\item \textbf{Problema inammissibile}: $X=\emptyset$. Es.: $\min\{x_1-x_2: x_1+x_2\ge 2,\ 0\le x_1,x_2\le 1\}$.
+\item \textbf{Problema illimitato}: per un problema di minimo, per ogni $M$ esiste $x\in X$ con $f(x)< M$ (l'obiettivo scende indefinitamente). Es.: $\max\{2x_1+x_2: x_2\ge x_1,\ x\ge 0\}$.
+\item \textbf{Nessun ottimo pur essendo limitato}: $\min\{2x: x>4\}$ ha estremo inferiore 8 non raggiunto. Per questo \textbf{nei modelli non si usano mai disuguaglianze strette}.
+\end{itemize}
+\end{oss}
+
+\textbf{Min e max sono intercambiabili}:
+\[\min\{f(x):x\in X\}=-\max\{-f(x):x\in X\},\]
+e le soluzioni ottime dei due problemi coincidono.
+
+\subsection{Forma parametrica, forma compatta (matriciale), istanza}
+
+Uno stesso modello si può scrivere in tre modi:
+\begin{itemize}[nosep]
+  \item \textbf{forma esplicita (estesa)}: con i numeri dell'istanza, un vincolo per riga (es.\ $3000x_L+5000x_P$\dots);
+  \item \textbf{forma parametrica}: con insiemi, indici e parametri simbolici ($\sum_{i\in I}t_ix_{ij}\le\gamma_j\ \forall j\in J$). È quella richiesta all'esame e quella che si scrive nel linguaggio di modellazione del laboratorio: il modello è separato dai dati;
+  \item \textbf{forma compatta (matriciale)}: $\max\{c^Tx: Ax\le b,\ x\ge0\}$, dove $c\in\R^n$ è il vettore dei costi/profitti, $A\in\R^{m\times n}$ la matrice dei coefficienti e $b\in\R^m$ il vettore dei termini noti. Serve per la teoria (simplesso, dualità).
+\end{itemize}
+Per passare alla forma compatta si ``srotolano'' le variabili in un unico vettore. Nel caso del coltivatore (\S\ref{sec:colt}) con $x=(x_L,x_P)^T$:
+\[
+c=\begin{pmatrix}3000\\5000\end{pmatrix},\quad
+A=\begin{pmatrix}1&1\\7&0\\0&3\\10&20\end{pmatrix},\quad
+b=\begin{pmatrix}12\\70\\18\\160\end{pmatrix}.
+\]
+Con variabili a due indici $x_{ij}$ (sale operatorie) il vettore $x$ ha $|I|\cdot|J|$ componenti e ogni vincolo è una riga di $A$.
+
+\section{Tipi di modelli di Programmazione Matematica}
+
+\begin{defbox}[Programmazione Lineare]
+Un modello è di \textbf{Programmazione Lineare} se vincoli e funzione obiettivo sono \emph{funzioni lineari} delle variabili: somme di variabili moltiplicate per coefficienti noti. Niente potenze diverse da 1, niente prodotti tra variabili, niente $|\cdot|$, $\max$, $\min$, rapporti tra variabili, ecc.
+\end{defbox}
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Variabili & Classe \\ \midrule
+tutte continue & Programmazione Lineare (PL, \emph{LP})\\
+tutte intere & Programmazione Lineare Intera (PLI, \emph{ILP}); se $\{0,1\}$: binaria\\
+alcune intere, altre continue & Programmazione Lineare Mista Intera (PLMI, \emph{MILP})\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Altri tipi} (non trattati nel corso):
+\begin{itemize}[nosep]
+  \item \textbf{Programmazione non lineare} (eventualmente mista intera): obiettivo o vincoli non lineari. Es.: posizionare magazzini farmaceutici a distanza euclidea $\le K$ km da un gruppo di ospedali: le variabili sono le coordinate $(u,v)$ e il vincolo $\sqrt{(u-a_h)^2+(v-b_h)^2}\le K$ non è lineare.
+  \item \textbf{Programmazione stocastica}: alcuni dati sono incerti (es.\ durate degli interventi che sono variabili aleatorie).
+  \item \textbf{Simulazione}: emula il comportamento dinamico di un sistema (analisi \emph{what-if}).
+  \item \textbf{Teoria dei giochi}: più decisori (es.\ agenti di un mercato).
+  \item \textbf{Ottimizzazione multi-criterio}: più obiettivi da valutare contemporaneamente.
+\end{itemize}
+
+\begin{oss}[perché insistiamo sulla linearità]
+Un problema di PL con milioni di variabili e vincoli si risolve in minuti. Appena si introducono variabili intere (PLI/PLMI) la dimensione trattabile scende a migliaia/decine di migliaia; con vincoli non lineari e non convessi a centinaia. Per questo nella modellazione l'obiettivo è \textbf{scrivere tutto in forma lineare}, introducendo variabili intere/binarie solo quando serve (e servono spesso: decisioni sì/no, logica, costi fissi). Il Cap.~\ref{cap:mod} è in buona parte una raccolta di ``trucchi'' per linearizzare.
+\end{oss}
+
+\begin{extra}[rilassamento (appunti a.a.\ precedente)]
+Concetto che diventa centrale nella PLI (branch-and-bound) ma conviene averlo chiaro subito.
+
+Dato $P:\min\{f(x):x\in X\}$, un \textbf{rilassamento} è un problema $\bar P:\min\{\bar f(x):x\in \bar X\}$ con
+(1) $\bar X\supseteq X$ e (2) $\bar f(x)\le f(x)$ per ogni $x\in X$ (per un massimo: $\bar f(x)\ge f(x)$).
+
+Proprietà (per un minimo):
+\begin{itemize}[nosep]
+\item il valore ottimo di $\bar P$ è un \textbf{limite inferiore} (\emph{lower bound}) di quello di $P$: $\bar z\le z^*$ (per un massimo è un limite superiore);
+\item una soluzione ottima di $\bar P$ può non essere ammissibile per $P$;
+\item se una soluzione ottima $\bar x$ di $\bar P$ è ammissibile per $P$ e $\bar f(\bar x)=f(\bar x)$, allora $\bar x$ è ottima anche per $P$.
+\end{itemize}
+Il rilassamento più importante del corso è il \textbf{rilassamento continuo}: si sostituisce $x\in\{0,1\}$ con $x\in[0,1]$ (o $x\in\Z$ con $x\in\R$). Es.: per lo zaino di \S\ref{sec:zaino} il rilassamento continuo vale 5550, l'ottimo intero 5300.
+
+Una \textbf{restrizione} invece restringe la regione ammissibile ($\hat X\subset X$): fornisce un limite superiore per un minimo. Attenzione: restrizione non è il ``contrario'' di rilassamento.
+\end{extra}
+
+\begin{extra}[richiami di convessità (serviranno per la PL)]
+\begin{itemize}[nosep]
+\item Combinazione di $x',x''$ con pesi $\lambda',\lambda''$: \emph{lineare} (pesi qualsiasi), \emph{affine} ($\lambda'+\lambda''=1$), \emph{conica} ($\lambda',\lambda''\ge0$), \emph{convessa} (entrambe). Lo stesso vale per $m$ vettori.
+\item Un insieme $S$ è \textbf{convesso} se contiene il segmento tra due qualsiasi suoi punti: $\lambda x'+(1-\lambda)x''\in S$ per ogni $\lambda\in[0,1]$. L'\textbf{inviluppo convesso} $\mathrm{conv}(V)$ è il più piccolo convesso che contiene $V$.
+\item $f$ è \textbf{convessa} se $f(\lambda x'+(1-\lambda)x'')\le \lambda f(x')+(1-\lambda)f(x'')$; concava se vale $\ge$. Le funzioni lineari sono sia convesse sia concave. Il massimo di funzioni convesse è convesso (il minimo no).
+\item Se $f$ è convessa, $\{x: f(x)\le\alpha\}$ è convesso. Quindi ogni vincolo lineare definisce un semispazio convesso e la regione ammissibile di una PL, $\{x:Ax\le b,x\ge0\}$, è un \textbf{poliedro} (intersezione di semispazi) convesso.
+\item Un insieme $\{(x,y): x\le Cy,\ y\in\{0,1\}\}$ \emph{non} è convesso: le variabili intere distruggono la convessità, ed è questo che rende la PLI difficile.
+\end{itemize}
+\end{extra}

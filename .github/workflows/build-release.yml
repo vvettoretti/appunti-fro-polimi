@@ -1,0 +1,67 @@
+name: Build e release appunti
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.tex'
+      - '.latexmkrc'
+      - '.github/workflows/build-release.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compila il PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: appunti_FRO.tex
+          latexmk_use_lualatex: false
+
+      - name: Calcola versione e note di rilascio
+        id: meta
+        run: |
+          TAG="v$(date -u +%Y.%m.%d)-${GITHUB_RUN_NUMBER}"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          PREV=$(git describe --tags --abbrev=0 2>/dev/null || true)
+          {
+            echo "Appunti di Fondamenti di Ricerca Operativa, build del $(date -u '+%d/%m/%Y %H:%M') UTC."
+            echo
+            echo "Commit inclusi:"
+            if [ -n "$PREV" ]; then
+              git log --no-merges --pretty='- %s (%h)' "$PREV"..HEAD
+            else
+              git log --no-merges --pretty='- %s (%h)'
+            fi
+          } > notes.md
+          cp appunti_FRO.pdf "appunti_FRO_${TAG}.pdf"
+
+      - name: Carica il PDF come artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: appunti_FRO
+          path: appunti_FRO.pdf
+
+      - name: Pubblica la release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.meta.outputs.tag }}
+          name: Appunti FRO ${{ steps.meta.outputs.tag }}
+          body_path: notes.md
+          make_latest: true
+          files: |
+            appunti_FRO.pdf
+            appunti_FRO_${{ steps.meta.outputs.tag }}.pdf

@@ -1,0 +1,92 @@
+\documentclass[11pt,a4paper,openany]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{microtype}
+\usepackage{eurosym}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,array,multirow}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,patterns}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+
+% --- lingua (senza babel-italian) ---
+\renewcommand{\contentsname}{Indice}
+\renewcommand{\chaptername}{Capitolo}
+\renewcommand{\figurename}{Figura}
+\renewcommand{\tablename}{Tabella}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\sloppy
+
+\titleformat{\chapter}[display]{\normalfont\huge\bfseries\color{blue!50!black}}{\large\chaptertitlename\ \thechapter}{8pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-20pt}{20pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textsc{Fondamenti di Ricerca Operativa}}
+\fancyhead[R]{\small\nouppercase{\leftmark}}
+\fancyfoot[C]{\thepage}
+
+% --- box ---
+\newtcolorbox[auto counter,number within=chapter]{defbox}[1][]{enhanced,breakable,colback=blue!4,colframe=blue!50!black,fonttitle=\bfseries,title={Definizione~\thetcbcounter\ifx&#1&\else\ (#1)\fi}}
+\newtcolorbox{esbox}[1][]{enhanced,breakable,colback=green!3,colframe=green!40!black,fonttitle=\bfseries,title={Esempio\ifx&#1&\else: #1\fi}}
+\newtcolorbox{oss}[1][]{enhanced,breakable,colback=gray!6,colframe=gray!60,fonttitle=\bfseries,coltitle=black,title={Osservazione\ifx&#1&\else: #1\fi}}
+\newtcolorbox{esame}{enhanced,breakable,colback=orange!6,colframe=orange!70!black,fonttitle=\bfseries,title={Per l'esame}}
+\newtcolorbox{extra}[1][]{enhanced,breakable,colback=violet!4,colframe=violet!60!black,fonttitle=\bfseries,title={Approfondimento\ifx&#1&\else: #1\fi}}
+\newtcolorbox{modello}[1][]{enhanced,breakable,colback=white,colframe=black!70,boxrule=0.6pt,fonttitle=\bfseries,coltitle=black,colbacktitle=black!8,title={#1}}
+
+\newtheorem{prop}{Proposizione}[chapter]
+\theoremstyle{remark}
+\newtheorem*{dimo}{Dimostrazione}
+
+% --- macro ---
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\st}{\text{s.t.}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\NP}{\mathcal{NP}}
+\newcommand{\Pc}{\mathcal{P}}
+\newcommand{\red}{\propto}
+
+\begin{document}
+
+\begin{titlepage}
+\centering
+\vspace*{3cm}
+{\Huge\bfseries Fondamenti di Ricerca Operativa\par}
+\vspace{0.6cm}
+{\Large Appunti del corso -- A.A.\ 2026/27\par}
+\vspace{0.4cm}
+{\large Prof.\ Marta Pascoal (Politecnico di Milano, DEIB)\par}
+\vspace{1.5cm}
+{\large Lezioni 1--5 (15--25 settembre 2026) + PL dalle slide 04\par}
+\vspace{0.3cm}
+\begin{minipage}{0.75\textwidth}\centering
+Introduzione alla RO $\cdot$ Modelli di Programmazione Lineare (intera e mista) $\cdot$ Variabili libere e discrete $\cdot$ Cenni di complessità computazionale $\cdot$ PL: forme, geometria e teorema fondamentale $\cdot$ Quesiti V/F di allenamento $\cdot$ Esercitazione 1 (modelli) con soluzioni
+\end{minipage}
+\vfill
+{\small Redatti a partire dalle slide del corso (adattate da G.\ Carello), dagli appunti di P.\ Belotti (versione 2025) e dall'Esercitazione n.\,1. I box viola \emph{Approfondimento} contengono materiale non presente nelle slide di quest'anno ma utile per capire (o che servirà più avanti). I risultati numerici degli esempi sono stati verificati con un solutore.\par}
+\end{titlepage}
+
+\tableofcontents
+
+\input{cap0_info}
+\input{cap1_intro}
+\input{cap2_modelli}
+\input{cap3_complessita}
+\input{cap3b_pl}
+\input{cap4_esercitazione}
+\input{cap5_quiz}
+\input{cap5_riepilogo}
+
+\end{document}

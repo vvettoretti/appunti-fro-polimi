@@ -1,0 +1,328 @@
+\chapter{Modelli di Programmazione Lineare}\label{cap:mod}
+
+\section{Come si costruisce un modello}
+
+\begin{center}
+\begin{tabular}{@{}lcl@{}}
+\toprule
+Dati & $\longrightarrow$ & insiemi e parametri\\
+Decisioni & $\longrightarrow$ & variabili decisionali\\
+Requisiti & $\longrightarrow$ & vincoli\\
+Obiettivo & $\longrightarrow$ & funzione obiettivo\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{esame}
+Metodo che conviene seguire \emph{sempre} (e che viene valutato):
+\begin{enumerate}[nosep]
+\item \textbf{Insiemi e parametri}: elencali con il loro significato e unità di misura.
+\item \textbf{Variabili}: per ognuna scrivi \emph{significato}, \emph{indici} (``$\forall i\in I$'') e \emph{dominio} ($\ge0$, libera, intera, $\{0,1\}$). Chiediti: ``se conosco il valore di queste variabili, so ricostruire \emph{tutta} la decisione?''.
+\item \textbf{Vincoli}: uno per requisito, con il quantificatore corretto ($\forall$). Controlla che descrivano \emph{tutte e sole} le soluzioni ammissibili: se ne mancano, il modello accetta soluzioni assurde; se sono troppo stretti, si tagliano soluzioni buone (anche l'ottimo).
+\item \textbf{Obiettivo}: $\min$ o $\max$ di un'espressione lineare.
+\item \textbf{Verifica}: nessun prodotto tra variabili, nessuna disuguaglianza stretta, nessun indice ``libero'' non quantificato, dimensioni coerenti.
+\end{enumerate}
+Distingui sempre ciò che \emph{decidi} (variabili) da ciò che è \emph{dato}, anche se incerto (parametri: prezzi futuri, meteo, domanda\ldots).
+\end{esame}
+
+\section{Il problema del coltivatore}\label{sec:colt}
+
+\textbf{Testo.} Un coltivatore ha 12 ettari da coltivare a lattuga o patate. Risorse: 70 kg di semi di lattuga, 18 t di tuberi, 160 t di stallatico. Resa: 3000 \euro/ha (lattuga), 5000 \euro/ha (patate). Consumi per ettaro: lattuga 7 kg di semi e 10 t di stallatico; patate 3 t di tuberi e 20 t di stallatico. Quanto terreno destinare a ciascuna coltura per massimizzare la resa?
+
+
+\textbf{Variabili}: $x_L,x_P\ge 0$ = ettari coltivati a lattuga / patate (continue).
+\begin{modello}{Coltivatore (forma esplicita)}
+\begin{align*}
+\max\ & 3000x_L+5000x_P\\
+\st\ & x_L+x_P\le 12 &&\text{(terreno)}\\
+& 7x_L\le 70 &&\text{(semi di lattuga)}\\
+& 3x_P\le 18 &&\text{(tuberi)}\\
+& 10x_L+20x_P\le 160 &&\text{(stallatico)}\\
+& x_L,x_P\ge 0
+\end{align*}
+\end{modello}
+
+\textbf{Forma parametrica.} $C$ insieme delle colture, $R$ insieme delle risorse (senza il terreno), $p_j$ resa per ettaro della coltura $j$, $a_{ij}$ quantità di risorsa $i$ usata per ettaro di coltura $j$, $b_i$ disponibilità di $i$, $S$ ettari totali:
+\[
+\max \sum_{j\in C}p_jx_j\quad \st\ \sum_{j\in C}x_j\le S;\quad \sum_{j\in C}a_{ij}x_j\le b_i\ \ \forall i\in R;\quad x_j\ge0\ \ \forall j\in C.
+\]
+È il prototipo dei \textbf{problemi di mix produttivo}: si sceglie quanto produrre di ogni bene con risorse limitate.
+
+\paragraph{Soluzione grafica.} Con due variabili si può disegnare la regione ammissibile (un poligono convesso) e ``spingere'' la retta di livello $3000x_L+5000x_P=\alpha$ nella direzione del gradiente $c=(3000,5000)$ finché tocca ancora la regione.
+
+\begin{center}
+\begin{tikzpicture}[scale=0.55,>=Stealth]
+\fill[blue!12] (0,0)--(10,0)--(10,2)--(8,4)--(4,6)--(0,6)--cycle;
+\draw[->] (-0.5,0)--(15,0) node[below] {$x_L$};
+\draw[->] (0,-0.5)--(0,10) node[above] {$x_P$};
+\foreach \x in {2,4,...,12} \draw (\x,0.1)--(\x,-0.1) node[below,font=\scriptsize] {\x};
+\foreach \y in {2,4,6,8} \draw (0.1,\y)--(-0.1,\y) node[left,font=\scriptsize] {\y};
+\draw[thick,red!70!black] (12,0)--(2,10) node[above,font=\scriptsize] {terreno};
+\draw[thick,green!50!black] (10,-0.3)--(10,9) node[above,font=\scriptsize] {semi};
+\draw[thick,orange!80!black] (-0.3,6)--(13,6) node[right,font=\scriptsize] {tuberi};
+\draw[thick,violet] (0,8)--(13,1.5) node[above right,font=\scriptsize] {stallatico};
+\draw[dashed] (0,8.8) node[left,font=\scriptsize] {$f=44000$}--(14.67,0);
+\fill (8,4) circle (4pt) node[above right,font=\small] {$x^*=(8,4)$};
+\draw[->,thick] (2,2)--(3.5,4.5) node[above,font=\scriptsize] {$\nabla f$};
+\end{tikzpicture}
+\end{center}
+
+I vertici della regione sono $(0,0),(10,0),(10,2),(8,4),(4,6),(0,6)$, con valori $0$, $30000$, $40000$, $\mathbf{44000}$, $42000$, $30000$. L'ottimo è $x^*=(8,4)$: 8 ettari a lattuga e 4 a patate, resa 44\,000 \euro. In $x^*$ sono \emph{attivi} (soddisfatti all'uguaglianza) i vincoli di terreno e stallatico; semi e tuberi avanzano (14 kg e 6 t).
+
+\begin{oss}[anticipazione]
+L'ottimo di una PL, se esiste, si trova sempre in un \textbf{vertice} della regione ammissibile. Il metodo del simplesso sfrutta questo fatto spostandosi di vertice in vertice adiacente migliorando l'obiettivo. Con variabili intere questo non vale più: il vertice ottimo può avere coordinate frazionarie.
+\end{oss}
+
+\section{Il problema della dieta}\label{sec:dieta}
+
+\textbf{Testo.} Mensa scolastica: si vuole il menù giornaliero a costo minimo che fornisca almeno $d=700$ calorie. Dati per etto:
+
+\begin{center}
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+Cibo & Spaghetti & Riso & Lonza & Cavolo & Insalata & Mela\\ \midrule
+Prezzo $p_i$ (\euro/hg) & 0.20 & 0.50 & 2.20 & 0.10 & 0.15 & 0.20\\
+Calorie $c_i$ (/hg) & 300 & 250 & 200 & 70 & 180 & 100\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{modello}{Dieta (forma parametrica)}
+$F$: insieme dei cibi; $x_i\ge0$: etti del cibo $i\in F$.
+\begin{align*}
+\min\ & \sum_{i\in F}p_ix_i\\
+\st\ & \sum_{i\in F}c_ix_i\ge d\\
+& x_i\ge 0 && \forall i\in F
+\end{align*}
+\end{modello}
+Con più nutrienti $k\in K$ (proteine, grassi, \ldots) con fabbisogno $d_k$ e contenuto $a_{ki}$ si ha un vincolo per nutriente: $\sum_i a_{ki}x_i\ge d_k\ \forall k\in K$. È il prototipo dei \textbf{problemi di copertura della domanda a costo minimo} (duale ``naturale'' del mix produttivo).
+
+\begin{esbox}[soluzione e intuizione]
+Con un solo vincolo conviene usare solo il cibo con il miglior rapporto calorie/prezzo: spaghetti $300/0.2=1500$ cal/\euro{} (insalata 1200, cavolo 700, riso e mela 500, lonza 91). Ottimo: $x_S=700/300=2.\overline{3}$ hg, costo $0.4\overline{6}$ \euro. Una dieta di soli spaghetti: il modello fa esattamente ciò che gli chiediamo, non ciò che intendiamo. Servono altri vincoli (qualità, varietà), che introduciamo ora.
+\end{esbox}
+
+\subsection{Vincoli di qualità (blending)}\label{sec:blending}
+
+\emph{Almeno il 30\% delle calorie deve provenire da frutta e verdura.} Sia $V=\{\text{cavolo, insalata, mela}\}\subseteq F$. La traduzione naturale
+\[ \frac{\sum_{i\in V}c_ix_i}{\sum_{i\in F}c_ix_i}\ge 0.3 \]
+\textbf{non è lineare} (rapporto tra variabili). Ma il denominatore è positivo (le calorie totali sono $\ge 700>0$), quindi si può moltiplicare:
+\[ \boxed{\sum_{i\in V}c_ix_i\ \ge\ 0.3\sum_{i\in F}c_ix_i} \qquad\Longleftrightarrow\qquad \sum_{i\in V}0.7\,c_ix_i-\sum_{i\in F\setminus V}0.3\,c_ix_i\ge 0. \]
+Questo è un \textbf{vincolo di blending} (miscelazione): impone che una componente rappresenti almeno/al più una certa frazione del totale. Compare ovunque ci siano miscele (benzine, leghe, mangimi, portafogli).
+
+Nuovo ottimo: $x_S=1.6\overline{3}$ hg (490 cal) e $x_{\text{insalata}}=1.1\overline{6}$ hg (210 cal $=30\%$), costo $\approx0.502$ \euro.
+
+\begin{oss}
+Attenzione al caso in cui il denominatore può annullarsi: se il totale può essere 0, la forma moltiplicata è ancora corretta (diventa $0\ge0$), mentre il rapporto non è definito. La forma lineare è quindi anche più robusta.
+\end{oss}
+
+\subsection{Variabili logiche e vincoli di big-\texorpdfstring{$M$}{M}}\label{sec:bigM}
+
+\emph{Nel menù non possono esserci sia gli spaghetti sia il riso.} Una condizione del tipo ``$x_S>0$ e $x_R>0$ non entrambi'' non è esprimibile con le sole variabili continue. Introduciamo \textbf{variabili logiche} (binarie):
+\[ y_S\in\{0,1\}: 1 \text{ se gli spaghetti fanno parte della dieta};\qquad y_R\in\{0,1\}: \text{idem per il riso.}\]
+Il vincolo logico è semplicemente $y_S+y_R\le 1$. Ora bisogna \textbf{collegare} $x$ e $y$:
+\[ x_S>0\Rightarrow y_S=1\quad(\text{equivalente a } y_S=0\Rightarrow x_S=0)\qquad\leadsto\qquad x_S\le M y_S,\quad x_R\le M y_R, \]
+dove $M$ è una costante \emph{abbastanza grande da non limitare} i valori sensati di $x$. Se $y_S=0$ il vincolo forza $x_S\le0$, cioè $x_S=0$; se $y_S=1$ diventa $x_S\le M$, inattivo.
+
+\begin{oss}[cosa il big-$M$ non impone]
+$x_S\le My_S$ realizza solo l'implicazione $x_S>0\Rightarrow y_S=1$. Non impone $y_S=1\Rightarrow x_S>0$: il modello può porre $y_S=1$ con $x_S=0$. Di solito va bene perché $y$ ha un costo o compare in vincoli restrittivi (quindi all'ottimo non viene accesa inutilmente). Se serve anche l'implicazione inversa si usa un lotto minimo (sotto) con una soglia $\varepsilon>0$ o $q>0$.
+\end{oss}
+
+\begin{esame}
+\textbf{Come scegliere $M$.} $M$ deve essere un \emph{limite superiore valido} per la variabile (o per l'espressione) che controlla, in ogni soluzione che ci interessa; per il resto conviene che sia il \emph{più piccolo possibile}. Esempi: la capacità di una macchina; il budget diviso per il prezzo; nella dieta, spendere più di quanto costa la dieta di soli spaghetti non ha senso\ldots Un $M$ enorme ($10^9$) è formalmente corretto, ma rende debole il rilassamento continuo (la $y$ può valere $10^{-9}$) e crea problemi numerici ai solutori. All'esame giustifica il valore scelto.
+\end{esame}
+
+\subsection{Quantità minima (lotto minimo)}
+
+\emph{Se si mette il riso nel menù, se ne devono mettere almeno $q$ etti.}
+\[ q\,y_R\le x_R\le M\,y_R. \]
+Se $y_R=0$: $x_R=0$. Se $y_R=1$: $q\le x_R\le M$. L'insieme dei valori ammessi per $x_R$ è $\{0\}\cup[q,M]$, che \textbf{non è convesso}: con sole variabili continue non si potrebbe rappresentare. Questo è il vincolo di \textbf{quantità (lotto) minima}, tipico della produzione (``se accendo la macchina, produco almeno $q$'').
+
+\subsection{Catalogo dei vincoli logici}\label{sec:logici}
+
+Nell'esempio della dieta: al più una fonte di carboidrati $y_S+y_R\le 1$; almeno una fonte di vitamine $y_C+y_I+y_M\ge1$; esattamente una verdura $y_C+y_I=1$.
+
+In generale, con $y_a,y_b,y_c\in\{0,1\}$ associate alle scelte $a,b,c$:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Requisito logico & Vincolo lineare\\ \midrule
+al più una tra $a$ e $b$ & $y_a+y_b\le 1$\\
+esattamente una tra $a$ e $b$ & $y_a+y_b=1$\\
+almeno una tra $a$ e $b$ ($a\lor b$ vera) & $y_a+y_b\ge 1$\\
+al più / almeno / esattamente $k$ tra $n$ & $\sum_i y_i\le k$ / $\ge k$ / $=k$\\
+non $a$ & $1-y_a$\\
+se $a$ allora $b$ ($a\Rightarrow b$) & $y_a\le y_b$\\
+se $a$ allora non $b$ & $y_a+y_b\le 1$\\
+$a$ se e solo se $b$ & $y_a=y_b$\\
+se $a$ e $b$ allora $c$ & $y_a+y_b-1\le y_c$\\
+se almeno una tra $a$ e $b$ allora $c$ & $y_a+y_b\le 2y_c$ \quad (oppure $y_a\le y_c,\ y_b\le y_c$)\\
+se almeno $m$ tra $y_1,\dots,y_n$ allora $w$ & $\sum_{i=1}^n y_i-m+1\le (n-m+1)\,w$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Verifica dell'ultimo.} Se $\sum y_i\ge m$, il lato sinistro è $\ge1$ e quindi $w$ deve valere 1. Se $\sum y_i\le m-1$, il lato sinistro è $\le0$ e $w$ è libera. Il lato sinistro vale al più $n-m+1$ (tutte a 1), quindi il coefficiente $n-m+1$ è esattamente quello che serve (è il ``big-$M$'' più piccolo). Con $m=2,n=2$ si ritrova ``se $a$ e $b$ allora $c$''; con $m=1,n=2$ si ritrova ``se almeno una allora $c$''.
+
+\textbf{Metodo generale} per verificare un vincolo logico: fai la tabella di verità, cioè controlla tutte le combinazioni di valori 0/1 e verifica che il vincolo escluda esattamente quelle vietate.
+
+\begin{extra}[variabili che \emph{valgono} un'espressione logica]
+A volte serve una variabile $z$ che \emph{sia uguale} a una funzione logica (non solo un vincolo che la imponga vera):
+\begin{itemize}[nosep]
+\item $z=y_1\land y_2$ (AND): $z\le y_1,\ z\le y_2,\ z\ge y_1+y_2-1$. (Tentazione da evitare: $z=y_1y_2$, prodotto non lineare. Questo è il modo standard di \emph{linearizzare il prodotto di due binarie}.)
+\item $z=y_1\lor y_2$ (OR): $z\ge y_1,\ z\ge y_2,\ z\le y_1+y_2$.
+\item $z=y_1\oplus y_2$ (XOR): $z\ge y_1-y_2,\ z\ge y_2-y_1,\ z\le y_1+y_2,\ z\le 2-y_1-y_2$.
+\end{itemize}
+Se $z$ compare solo in un vincolo o nell'obiettivo con un ``verso'' preciso, spesso basta metà dei vincoli (quelli che impediscono a $z$ di ``barare'' nella direzione favorevole).
+\end{extra}
+
+\subsection{Attivare e disattivare un vincolo}
+
+Si vuole imporre $\sum_j a_jx_j\le b$ \emph{solo se} $y=1$:
+\[ \sum_j a_jx_j\le b+M(1-y). \]
+Con $y=1$ è il vincolo originale; con $y=0$ diventa ridondante se $M\ge \max_x\sum_ja_jx_j-b$.
+
+\begin{esbox}[calcolo di $M$]
+Vincolo $5x_1+4x_2+7x_3-9x_4\le16$ con $x_1\in\{0,1\}$, $x_2\in[0,5]$, $x_3\in\{0,\dots,4\}$, $x_4\in[0,1]$. Il massimo del lato sinistro si ottiene con le variabili a coefficiente positivo al loro massimo e $x_4$ al minimo: $5+20+28-0=53$. Serve $16+M\ge53$, cioè $M\ge 37$: il valore migliore è $M=37$.
+\end{esbox}
+
+\textbf{Vincoli disgiuntivi} (``almeno uno tra due vincoli deve valere''): $g_1(x)\le b_1+M_1(1-y)$, $g_2(x)\le b_2+M_2y$ con $y\in\{0,1\}$. Più in generale, ``almeno $k$ tra $m$ vincoli'': $g_i(x)\le b_i+M_i(1-y_i)$, $\sum_i y_i\ge k$.
+
+\textbf{Costo fisso} (\emph{fixed charge}): costo $f+cx$ se $x>0$, $0$ se $x=0$. Si modella con $y\in\{0,1\}$, obiettivo $fy+cx$ e vincolo $x\le My$. Qui l'implicazione inversa non serve: minimizzando i costi, il solutore non pagherà mai $f$ inutilmente.
+
+\section{Investimento di capitale e problema dello zaino}\label{sec:zaino}
+
+\textbf{Investimento di capitale.} Capitale $B$, $n$ strumenti finanziari; lo strumento $i$ si può acquistare fino a una quantità (in euro) $w_i$ e, se acquistato per intero, stacca una cedola $p_i$. Massimizzare il ritorno totale.
+
+Variabile: $x_i\in[0,1]$ = frazione dello strumento $i$ acquistata (il ritorno è proporzionale: $p_ix_i$).
+\begin{modello}{Investimento (continuo)}
+\[ \max\sum_{i=1}^n p_ix_i\quad\st\ \sum_{i=1}^n w_ix_i\le B,\qquad 0\le x_i\le 1\ \ \forall i. \]
+\end{modello}
+(Equivalentemente $z_i\in[0,w_i]$ = euro investiti in $i$, con ritorno $\frac{p_i}{w_i}z_i$.)
+
+\textbf{Variante:} gli strumenti non sono frazionabili, o si compra tutto o niente: $x_i\in[0,1]\ \to\ x_i\in\{0,1\}$. Si ottiene il \textbf{problema dello zaino} (\emph{knapsack}).
+
+\begin{modello}{Problema dello zaino (0/1)}
+Dati: oggetti $I$, peso $w_i$ e profitto $p_i$ per $i\in I$, capacità $B$. $x_i=1$ se l'oggetto $i$ è nello zaino.
+\[ \max\sum_{i\in I}p_ix_i\quad\st\ \sum_{i\in I}w_ix_i\le B,\qquad x_i\in\{0,1\}\ \ \forall i\in I. \]
+\end{modello}
+
+\begin{oss}[continuo vs intero: una differenza enorme]
+La versione continua (\emph{zaino frazionario}) si risolve con un algoritmo \emph{greedy}: si ordinano gli oggetti per rapporto $p_i/w_i$ decrescente e si riempie lo zaino in quest'ordine, frazionando solo l'ultimo oggetto che non entra. Complessità $O(n\log n)$. La versione 0/1 invece è \textbf{NP-completa} (Cap.~\ref{cap:compl}): il greedy può sbagliare e non si conosce un algoritmo polinomiale.
+\end{oss}
+
+\begin{esbox}[zaino (dagli appunti a.a.\ precedente)]
+Capacità 20 kg.
+\begin{center}\small
+\begin{tabular}{@{}l*{8}{c}@{}}
+\toprule
+Oggetto & 1&2&3&4&5&6&7&8\\ \midrule
+Valore & 1250&300&100&2000&900&300&250&1800\\
+Peso & 7.5&1.5&4&8&3&0.5&3&5.5\\
+$p/w$ & 167&200&25&250&300&600&83&327\\
+\bottomrule
+\end{tabular}
+\end{center}
+\textbf{Rilassamento continuo} (greedy): ordine $6,8,5,4,2,1,\dots$; si prendono $6,8,5,4,2$ (18.5 kg, valore 5300) e $1.5/7.5=0.2$ dell'oggetto 1 (valore 250): \textbf{5550}.
+\textbf{Ottimo intero}: $\{2,4,5,6,8\}$, peso 18.5, valore \textbf{5300}. Qui il greedy (senza frazionare) trova l'ottimo, ma in generale non è così: con capacità 10 e oggetti $(p,w)=(6,6),(5,5),(5,5)$ il greedy prende solo il primo (6) mentre l'ottimo è 10.
+Il valore del rilassamento (5550) è un \emph{limite superiore}: ci dice subito che nessuna soluzione intera può superare 5550.
+\end{esbox}
+
+\section{Obiettivi bottleneck: minimizzare il massimo}\label{sec:bottleneck}
+
+\subsection{Apertura di ambulatori}
+Villaggi $I=\{1,\dots,n\}$, siti candidati $J=\{1,\dots,m\}$. Aprire un ambulatorio in $j$ costa $f_j$; budget $B$. Ogni villaggio va assegnato a un ambulatorio aperto; se $i$ è assegnato a $j$ gli abitanti percorrono $p_{ij}$ km. Obiettivo: \emph{minimizzare il percorso più lungo}.
+
+Variabili: $y_j\in\{0,1\}$ (apro in $j$); $x_{ij}\in\{0,1\}$ (assegno $i$ a $j$). L'obiettivo ``naturale'' è
+\[ \min\ \max_{i\in I}\ \sum_{j\in J}p_{ij}x_{ij}, \]
+non lineare. Si introduce una variabile ausiliaria $z$ (continua) che rappresenta il massimo:
+
+\begin{modello}{Localizzazione con obiettivo bottleneck}
+\begin{align*}
+\min\ & z\\
+\st\ & z\ge \sum_{j\in J}p_{ij}x_{ij} && \forall i\in I &&\text{($z$ maggiora ogni distanza)}\\
+& \sum_{j\in J}x_{ij}=1 && \forall i\in I &&\text{(ogni villaggio assegnato)}\\
+& x_{ij}\le y_j && \forall i\in I,j\in J &&\text{(solo a siti aperti)}\\
+& \sum_{j\in J}f_jy_j\le B &&&&\text{(budget)}\\
+& x_{ij},y_j\in\{0,1\}
+\end{align*}
+\end{modello}
+(Alternativa equivalente per il primo vincolo: $z\ge p_{ij}x_{ij}\ \forall i,j$.)
+
+\begin{prop}[linearizzazione del min-max]
+Se $f_1,\dots,f_k$ sono lineari, i problemi
+\[ \min_{x\in X}\max\{f_1(x),\dots,f_k(x)\}\qquad\text{e}\qquad \min\{z:\ z\ge f_h(x)\ \forall h=1,\dots,k,\ x\in X\} \]
+hanno le stesse soluzioni ottime (in $x$) e lo stesso valore ottimo.
+\end{prop}
+\begin{dimo}
+$z\ge\max_h f_h(x)$ equivale a $z\ge f_h(x)$ per ogni $h$. Il secondo problema è quindi $\min\{z: z\ge\max_hf_h(x), x\in X\}$. In una soluzione ottima $(x^*,z^*)$ deve essere $z^*=\max_hf_h(x^*)$: se fosse $z^*>\max_hf_h(x^*)$, la soluzione $(x^*,\max_hf_h(x^*))$ sarebbe ammissibile e strettamente migliore. Quindi all'ottimo $z$ coincide con il massimo e i due problemi si equivalgono. \hfill$\square$
+\end{dimo}
+
+\begin{esame}
+Il trucco funziona perché si combinano operatori ``opposti'': \textbf{min-max} (e simmetricamente \textbf{max-min}: $\max z$, $z\le f_h(x)\ \forall h$). \textbf{Non} funziona per max-max o min-min: in quel caso $z$ andrebbe all'infinito o servirebbero variabili binarie per scegliere quale $f_h$ è quella ``attiva''. Esempio: $\max\ \max_h f_h(x)$ richiede $z\le f_h(x)+M(1-u_h)$, $\sum_h u_h=1$, $u_h\in\{0,1\}$.
+\end{esame}
+
+\textbf{Valore assoluto.} $|f(x)|=\max\{f(x),-f(x)\}$, quindi $\min |f(x)|$ si linearizza con $\min z$, $z\ge f(x)$, $z\ge -f(x)$. Esempio (appunti): suddividere oggetti di valore $v_i$ in due gruppi il più equilibrati possibile, $x_i=1$ se $i$ va nel gruppo 1:
+\[ \min z\quad \st\ z\ge 2\sum_iv_ix_i-\sum_iv_i,\quad z\ge -2\sum_iv_ix_i+\sum_iv_i,\quad x_i\in\{0,1\}. \]
+
+\section{Variabili libere}\label{sec:libere}
+
+Non tutte le variabili sono non negative. \textbf{Esempio (orario dei treni).} Treni $T=\{1,\dots,n\}$, stazioni $S=\{1,\dots,m\}$, orario di arrivo $a_{ts}$. Vogliamo studiare l'effetto di una \emph{variazione} degli orari: la variabile naturale è
+\[ \delta_{ts}\in\R \quad(\text{libera}):\ \text{variazione dell'orario di arrivo di } t \text{ in } s,\qquad \text{nuovo orario}=a_{ts}+\delta_{ts}, \]
+che può essere un anticipo ($\delta<0$) o un ritardo ($\delta>0$). Nei modelli si scrive esplicitamente ``$\delta_{ts}$ libera'' (o $\delta_{ts}\in\R$).
+
+\textbf{Riduzione a variabili non negative.} Ogni variabile libera si scrive come differenza di due variabili non negative:
+\[ x=x^+-x^-,\qquad x^+,x^-\ge0. \]
+Serve perché il metodo del simplesso lavora con variabili $\ge0$.
+
+\begin{extra}[forma standard di una PL]
+Il simplesso richiede la \textbf{forma standard}: $\min c^Tx$, $Ax=b$, $x\ge0$. Ci si arriva sempre:
+\begin{itemize}[nosep]
+\item $\max f\ \to\ -\min(-f)$;
+\item $a^Tx\le b\ \to\ a^Tx+s=b$, $s\ge0$ (variabile di \emph{slack});
+\item $a^Tx\ge b\ \to\ a^Tx-s=b$, $s\ge0$ (variabile di \emph{surplus});
+\item $x$ libera $\to x^+-x^-$; $x\le0\to x=-x'$ con $x'\ge0$.
+\end{itemize}
+Esempio: $\max\{3x_1+5x_2-x_3:\ x_2+2x_3\le5,\ 2x_1-x_3=0,\ x_1,x_2\ge0,\ x_3\text{ libera}\}$ diventa
+$-\min\{-3x_1-5x_2+x_3^+-x_3^-:\ x_2+2x_3^+-2x_3^-+s_1=5,\ 2x_1-x_3^++x_3^-=0,\ x,s\ge0\}$.
+\end{extra}
+
+\begin{oss}[minimizzare scostamenti]
+Per minimizzare la variazione totale $\sum|\delta_{ts}|$: $\delta_{ts}=\delta_{ts}^+-\delta_{ts}^-$ e obiettivo $\min\sum(\delta_{ts}^++\delta_{ts}^-)$. All'ottimo al più una tra $\delta^+$ e $\delta^-$ è positiva (altrimenti si potrebbero ridurre entrambe della stessa quantità lasciando $\delta$ invariato e diminuendo l'obiettivo), quindi $\delta^++\delta^-=|\delta|$. Funziona solo se si \emph{minimizza} la somma; massimizzando non va bene.
+\end{oss}
+
+\section{Variabili discrete}\label{sec:discrete}
+
+\textbf{Esempio (dimensionamento di una rete di telecomunicazioni).} La capacità di un collegamento si ottiene installando canali di capacità fissata, quindi può assumere solo valori in un insieme finito $\{d_1,\dots,d_r\}$ (non tutti i reali, e nemmeno tutti gli interi).
+
+Per ogni collegamento $e$ si introducono binarie $y_{ek}\in\{0,1\}$, $k=1,\dots,r$ (1 se si sceglie il valore $d_k$):
+\[ \sum_{k=1}^r y_{ek}=1,\qquad c_e=\sum_{k=1}^r d_k\,y_{ek}. \]
+La variabile $c_e$ (che può anche essere sostituita dall'espressione ovunque compaia) assume esattamente uno dei valori ammessi. Se i canali hanno tutti capacità $u$ e se ne possono installare quanti se ne vuole, basta invece una variabile intera: $c_e=u\,n_e$, $n_e\in\Z_{\ge0}$.
+
+\begin{esame}
+Riassunto dei domini: \emph{continue} $x\ge0$ (quantità divisibili); \emph{libere} $x\in\R$ (variazioni, scostamenti, saldi); \emph{intere} $x\in\Z_{\ge0}$ (numero di oggetti indivisibili: infermieri, camion, confezioni); \emph{binarie} $x\in\{0,1\}$ (decisioni sì/no, assegnamenti, logica); \emph{discrete} in $\{d_1,\dots,d_r\}$ (tramite binarie di selezione).
+\end{esame}
+
+\section{Altri schemi ricorrenti}
+
+\subsection{Pianificazione multi-periodo con magazzino (bilanciamento)}
+Produzione nei periodi $t=1,\dots,T$ con domanda $d_t$, produzione $x_t\le c$, livello di magazzino a fine periodo $s_t$ (con $s_0$ dato), capacità del magazzino $f$ e costo di stoccaggio $g$:
+\begin{align*}
+\min\ & g\sum_t s_t\\
+\st\ & s_{t-1}+x_t=d_t+s_t && \forall t \quad(\text{ciò che entra} = \text{ciò che esce})\\
+& 0\le x_t\le c,\quad 0\le s_t\le f && \forall t.
+\end{align*}
+Il vincolo di bilanciamento (\emph{flow conservation}) è lo schema chiave di tutti i problemi con magazzino (Esercitazione, es.\ 8, 12, 16). Aggiungendo $y_t\in\{0,1\}$ con costo fisso e $qy_t\le x_t\le Qy_t$ si ottiene il \emph{lot sizing}.
+
+\subsection{Copertura, partizione, impaccamento di insiemi}
+Dati elementi $i\in M$ e sottoinsiemi $j\in N$ con $a_{ij}=1$ se $i\in S_j$, e $x_j\in\{0,1\}$ = ``scelgo $S_j$'':
+\begin{itemize}[nosep]
+\item \textbf{copertura} (\emph{set covering}): ogni elemento coperto almeno una volta, $\sum_j a_{ij}x_j\ge1\ \forall i$, $\min\sum_jc_jx_j$ (antenne, ambulanze, uffici);
+\item \textbf{partizione} (\emph{set partitioning}): esattamente una volta, $\sum_j a_{ij}x_j=1$;
+\item \textbf{impaccamento} (\emph{set packing}): al più una volta, $\sum_ja_{ij}x_j\le1$, $\max\sum_jc_jx_j$.
+\end{itemize}
+Casi su grafo: \emph{vertex cover} ($x_i+x_j\ge1$ per ogni lato) e \emph{insieme indipendente} ($x_i+x_j\le1$ per ogni lato).
+
+\subsection{Assegnamento}
+Ogni elemento $i$ assegnato a esattamente una risorsa $j$: $\sum_jx_{ij}=1\ \forall i$, con eventuali capacità $\sum_iw_ix_{ij}\le W_j\ \forall j$ e collegamento con l'apertura della risorsa $x_{ij}\le y_j$ (oppure la versione aggregata $\sum_iw_ix_{ij}\le W_jy_j$).

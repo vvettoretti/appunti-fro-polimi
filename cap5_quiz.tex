@@ -1,0 +1,118 @@
+\chapter[Allenamento quesiti brevi]{Allenamento per i quesiti brevi (Vero/Falso)}\label{cap:quiz}
+
+Stesso formato dei quesiti brevi: per ogni affermazione rispondi V o F, in circa 30 secondi ciascuna. Le soluzioni motivate sono in fondo al capitolo. Le domande Q1--Q6 riguardano i Capitoli 1--3 (primo quesito, 6/10); Q7--Q8 la PL (Capitolo~\ref{cap:pl}).
+
+\newcommand{\aff}[1]{\item[#1] }
+\begin{description}[leftmargin=1.2cm,style=nextline,itemsep=1pt]
+\item[\textbf{Q1}] \textbf{Definizioni.}
+\begin{description}[leftmargin=1.2cm,itemsep=0pt]
+\aff{1.1} Un problema di ottimizzazione può avere due soluzioni ottime con valori diversi della funzione obiettivo.
+\aff{1.2} Se la regione ammissibile è vuota, il problema si dice illimitato.
+\aff{1.3} $\min\{f(x):x\in X\}=-\max\{-f(x):x\in X\}$.
+\aff{1.4} Il problema $\min\{x: x>0\}$ ha soluzione ottima $x=0$.
+\end{description}
+
+\item[\textbf{Q2}] \textbf{Classi di modelli.}
+\begin{description}[leftmargin=1.2cm,itemsep=0pt]
+\aff{2.1} Un modello con vincoli e obiettivo lineari, alcune variabili continue e alcune binarie è un modello di PLMI.
+\aff{2.2} Il vincolo $x_1x_2\le 4$, con $x_1,x_2$ continue, è lineare.
+\aff{2.3} Il vincolo $\frac{x_1}{x_1+x_2}\ge 0.3$ (con $x_1+x_2>0$) si può riscrivere in modo equivalente come vincolo lineare.
+\aff{2.4} Il valore ottimo del rilassamento continuo di un problema di massimo in PLI è un limite superiore del suo valore ottimo.
+\end{description}
+
+\item[\textbf{Q3}] \textbf{Vincoli logici} ($y_a,y_b,y_c\in\{0,1\}$).
+\begin{description}[leftmargin=1.2cm,itemsep=0pt]
+\aff{3.1} ``Se si sceglie $a$ allora si sceglie $b$'' si scrive $y_b\le y_a$.
+\aff{3.2} ``Si sceglie almeno una tra $a$ e $b$'' si scrive $y_a+y_b=1$.
+\aff{3.3} ``Se si scelgono sia $a$ sia $b$, si sceglie $c$'' si scrive $y_a+y_b-1\le y_c$.
+\aff{3.4} ``Se si sceglie almeno una tra $a$ e $b$, si sceglie $c$'' si può scrivere $y_a+y_b\le 2y_c$.
+\end{description}
+
+\item[\textbf{Q4}] \textbf{Big-$M$ e lotto minimo} ($x\ge0$ continua, $y\in\{0,1\}$).
+\begin{description}[leftmargin=1.2cm,itemsep=0pt]
+\aff{4.1} Il vincolo $x\le My$ impone che, se $y=1$, allora $x>0$.
+\aff{4.2} Con $qy\le x\le My$ ($0<q<M$), $x$ può valere 0 oppure qualunque valore in $[q,M]$.
+\aff{4.3} Scegliere $M$ molto più grande del necessario rende il modello errato (esclude soluzioni ammissibili).
+\aff{4.4} Per attivare il vincolo $g(x)\le b$ solo quando $y=1$ si può scrivere $g(x)\le b+M(1-y)$, con $M\ge\max g(x)-b$.
+\end{description}
+
+\item[\textbf{Q5}] \textbf{Obiettivi e variabili.}
+\begin{description}[leftmargin=1.2cm,itemsep=0pt]
+\aff{5.1} $\min\max_i f_i(x)$, con $f_i$ lineari, equivale a $\min z$ con $z\ge f_i(x)$ per ogni $i$.
+\aff{5.2} $\max\max_i f_i(x)$ equivale a $\max z$ con $z\ge f_i(x)$ per ogni $i$.
+\aff{5.3} Una variabile libera $x$ si può sostituire con $x^+-x^-$, $x^+,x^-\ge0$.
+\aff{5.4} Per far assumere a una variabile solo i valori $\{d_1,\dots,d_r\}$ servono $r$ variabili binarie con somma pari a 1.
+\end{description}
+
+\item[\textbf{Q6}] \textbf{Complessità.}
+\begin{description}[leftmargin=1.2cm,itemsep=0pt]
+\aff{6.1} $\NP$ significa ``non polinomiale''.
+\aff{6.2} $\Pc\subseteq\NP$.
+\aff{6.3} Se $P_1\red P_2$ e $P_2\in\Pc$, allora $P_1\in\Pc$.
+\aff{6.4} Per dimostrare che un problema $P$ è $\NP$-completo basta mostrare che $P\red$ SAT.
+\aff{6.5} Un algoritmo di complessità $O(NB)$ per lo zaino ($B$ capacità) è polinomiale nella dimensione dell'istanza.
+\aff{6.6} La dimensione di un'istanza è il numero di bit necessari a codificarla.
+\aff{6.7} Lo zaino (versione di riconoscimento) è in $\NP$ perché dato un sottoinsieme di oggetti si verifica in tempo polinomiale che pesi $\le B$ e abbia profitto $\ge k$.
+\aff{6.8} La complessità di un algoritmo si misura nel caso medio.
+\end{description}
+
+\item[\textbf{Q7}] \textbf{Forme e soluzione grafica della PL.}
+\begin{description}[leftmargin=1.2cm,itemsep=0pt]
+\aff{7.1} Un problema di PL può avere esattamente due soluzioni ottime.
+\aff{7.2} Se la regione ammissibile di una PL è illimitata, il problema è illimitato.
+\aff{7.3} Il vincolo $a^Tx\ge b$ si porta in forma standard con una variabile di surplus: $a^Tx-s=b$, $s\ge0$.
+\aff{7.4} In un problema di minimo, nella risoluzione grafica ci si muove nella direzione del gradiente dell'obiettivo.
+\end{description}
+
+\item[\textbf{Q8}] \textbf{Geometria della PL.}
+\begin{description}[leftmargin=1.2cm,itemsep=0pt]
+\aff{8.1} Il punto $(2,2)$ è combinazione convessa di $(4,0)$ e $(1,3)$.
+\aff{8.2} Ogni cono è convesso.
+\aff{8.3} L'insieme $\{x\in\R^2: x_1^2+x_2^2\le1\}$ è un poliedro.
+\aff{8.4} Se una PL ha ottimo finito e la regione ammissibile ha vertici, almeno un vertice è ottimo.
+\aff{8.5} Una soluzione ottima locale di una PL è anche globale.
+\aff{8.6} La striscia $\{x\in\R^2: 0\le x_2\le1\}$ ha due vertici.
+\end{description}
+\end{description}
+
+\section*{Soluzioni}
+\begin{description}[leftmargin=1.2cm,itemsep=1pt,font=\normalfont\bfseries]
+\item[1.1 F] Le soluzioni ottime possono essere più d'una, ma hanno tutte lo stesso valore (il valore ottimo è unico).
+\item[1.2 F] Regione vuota $\Rightarrow$ problema \emph{inammissibile}. Illimitato: l'obiettivo migliora senza limite.
+\item[1.3 V] E le soluzioni ottime coincidono.
+\item[1.4 F] $0$ non è ammissibile e ogni $x>0$ è battuto da $x/2$: nessun ottimo. Per questo non si usano disuguaglianze strette.
+\item[2.1 V] Mista intera = alcune variabili intere (le binarie lo sono), altre continue.
+\item[2.2 F] Prodotto di variabili: non lineare.
+\item[2.3 V] $x_1\ge0.3(x_1+x_2)$, moltiplicando per il denominatore positivo (vincolo di blending).
+\item[2.4 V] Il rilassamento ha più soluzioni ammissibili; per un massimo dà un limite superiore.
+\item[3.1 F] È $y_a\le y_b$: se $y_a=1$ deve essere $y_b=1$. $y_b\le y_a$ esprime ``se $b$ allora $a$''.
+\item[3.2 F] Quello è ``esattamente una''. ``Almeno una'' è $y_a+y_b\ge1$.
+\item[3.3 V] Se $y_a=y_b=1$ il lato sinistro vale 1, quindi $y_c=1$; negli altri casi vale $\le0$.
+\item[3.4 V] Se almeno una vale 1, il lato sinistro è $\ge1$ e serve $y_c=1$; il 2 permette il caso $y_a=y_b=1$.
+\item[4.1 F] Impone solo $x>0\Rightarrow y=1$ (cioè $y=0\Rightarrow x=0$). Con $y=1$, $x=0$ è ancora ammesso.
+\item[4.2 V] Insieme $\{0\}\cup[q,M]$, non convesso: richiede la binaria.
+\item[4.3 F] Il modello resta corretto se $M$ è un limite valido; un $M$ eccessivo indebolisce il rilassamento continuo e crea problemi numerici, ma non esclude soluzioni.
+\item[4.4 V] Con $y=0$ il vincolo diventa ridondante se $b+M$ supera il massimo di $g$.
+\item[5.1 V] All'ottimo $z$ è uguale al massimo (altrimenti si potrebbe diminuire).
+\item[5.2 F] Con $z\ge f_i$ e $\max z$, $z$ cresce all'infinito. Max-max (e min-min) richiedono variabili binarie.
+\item[5.3 V] È la trasformazione usata per la forma standard.
+\item[5.4 V] $\sum_k y_k=1$ e $x=\sum_kd_ky_k$.
+\item[6.1 F] Non-deterministico Polinomiale.
+\item[6.2 V] Chi sa risolvere in tempo polinomiale sa anche verificare.
+\item[6.3 V] Si trasforma l'istanza, si risolve con l'algoritmo polinomiale di $P_2$, si ritraduce: tutto polinomiale.
+\item[6.4 F] Verso sbagliato. Serve $P\in\NP$ e SAT $\red P$ (un $\NP$-completo noto si riduce a $P$).
+\item[6.5 F] $B$ è codificato con $\log B$ bit, quindi $O(NB)$ è esponenziale nella dimensione: pseudo-polinomiale.
+\item[6.6 V] Con codifica ragionevole (binaria) dei numeri.
+\item[6.7 V] Il sottoinsieme è il certificato; la verifica costa $O(N)$.
+\item[6.8 F] Nel caso peggiore.
+\item[7.1 F] 0, 1 o infinite: se due punti sono ottimi lo è tutto il segmento.
+\item[7.2 F] Regione illimitata non basta: serve anche una direzione di recessione $e$ con $c^Te>0$ (per un max). Es.: $\min x_1$ su $\{x\ge0\}$ ha ottimo.
+\item[7.3 V] Per i vincoli $\le$ si aggiunge invece la slack.
+\item[7.4 F] Per minimizzare ci si muove nella direzione opposta, $-c$.
+\item[8.1 V] Con $\lambda=\frac13$: $\frac13(4,0)+\frac23(1,3)=(2,2)$.
+\item[8.2 F] Es.\ l'unione dei due semiassi positivi è un cono non convesso.
+\item[8.3 F] È convesso ma non è intersezione di un numero finito di semispazi.
+\item[8.4 V] Teorema fondamentale della PL.
+\item[8.5 V] Regione convessa e obiettivo lineare.
+\item[8.6 F] Non ha vertici: contiene rette (ogni punto sta in mezzo a due punti della striscia).
+\end{description}

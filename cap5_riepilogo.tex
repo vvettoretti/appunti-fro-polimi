@@ -1,0 +1,55 @@
+\chapter{Riepilogo: formulario di modellazione}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\small
+\begin{tabular}{@{}p{0.42\textwidth}p{0.52\textwidth}@{}}
+\toprule
+\textbf{Situazione} & \textbf{Modellazione lineare}\\ \midrule
+Frazione minima/massima di una miscela & $\sum_{i\in V}a_ix_i\ge\alpha\sum_{i\in F}a_ix_i$\\
+$x>0\Rightarrow y=1$ & $x\le My$\\
+Lotto minimo: $x\in\{0\}\cup[q,M]$ & $qy\le x\le My$\\
+Costo fisso $f$ se $x>0$ & obiettivo $fy+cx$, vincolo $x\le My$\\
+Vincolo attivo solo se $y=1$ & $g(x)\le b+M(1-y)$, $M\ge\max g-b$\\
+Almeno uno tra due vincoli & $g_1\le b_1+M_1y,\ g_2\le b_2+M_2(1-y)$\\
+$a\Rightarrow b$ & $y_a\le y_b$\\
+$a\land b\Rightarrow c$ & $y_a+y_b-1\le y_c$\\
+$a\lor b\Rightarrow c$ & $y_a+y_b\le2y_c$\\
+almeno $m$ di $n\Rightarrow w$ & $\sum y_i-m+1\le(n-m+1)w$\\
+$z=y_1\land y_2$ (prodotto di binarie) & $z\le y_1,\ z\le y_2,\ z\ge y_1+y_2-1$\\
+$\min\max_h f_h(x)$ & $\min z,\ z\ge f_h(x)\ \forall h$\\
+$\max\min_h f_h(x)$ & $\max z,\ z\le f_h(x)\ \forall h$\\
+$\min|f(x)|$ & $\min z,\ z\ge f(x),\ z\ge-f(x)$\\
+$\min\sum|\delta_i|$, $\delta_i$ libera & $\delta_i=\delta_i^+-\delta_i^-$, $\min\sum(\delta_i^++\delta_i^-)$\\
+Variabile libera & $x=x^+-x^-$, $x^\pm\ge0$\\
+Valore in $\{d_1,\dots,d_r\}$ & $\sum_ky_k=1$, $c=\sum_kd_ky_k$\\
+Magazzino multi-periodo & $s_{t-1}+x_t=d_t+s_t$\\
+Assegnamento con apertura & $\sum_jx_{ij}=1$, $x_{ij}\le y_j$\\
+Copertura & $\sum_ja_{ij}x_j\ge1\ \forall i$\\
+Turni ciclici & variabili = \emph{inizi} del turno\\
+Rapporto $\ge\alpha$ tra espressioni & moltiplica per il denominatore (se $>0$)\\
+Disuguaglianza stretta $x>0$ & mai: usa $x\ge\varepsilon$ o variabili binarie\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section*{Complessità in una pagina}
+\begin{itemize}[nosep]
+\item \textbf{Istanza}: problema con dati numerici fissati. \textbf{Dimensione}: bit di codifica (i numeri pesano $\log$ del loro valore).
+\item \textbf{Complessità di un algoritmo}: n.\ di operazioni elementari nel caso peggiore, in funzione della dimensione; notazione $O$. Polinomiale $O(n^d)$, esponenziale $O(2^n)$.
+\item \textbf{Riconoscimento}: ``esiste $x$ ammissibile con $cx\ge k$?''.
+\item $\Pc$: decidibile in tempo polinomiale. $\NP$: risposta SÌ verificabile in tempo polinomiale dato un certificato. $\Pc\subseteq\NP$; $\Pc\overset{?}{=}\NP$ aperto.
+\item $P_1\red P_2$: istanze di $P_1$ trasformate in tempo polinomiale in istanze di $P_2$; $P_2$ è almeno difficile quanto $P_1$.
+\item $\NP$-completo: in $\NP$ e ogni problema di $\NP$ vi si riduce. Per dimostrarlo: $P\in\NP$ + riduzione \emph{da} un $\NP$-completo noto.
+\item SAT è $\NP$-completo (Cook 1971). PLI è $\NP$-completa: clausola $\to\sum_{\text{pos}}x_i+\sum_{\text{neg}}(1-x_i)\ge1$. Zaino $\NP$-completo. PL continua $\in\Pc$.
+\end{itemize}
+
+\section*{PL in una pagina}
+\begin{itemize}[nosep]
+\item Forma standard: $\min c^Tx$, $Ax=b$, $x\ge0$ ($b\ge0$). Forma canonica: $\max c^Tx$, $Ax\le b$, $x\ge0$. Si passa dall'una all'altra con: cambio di segno dell'obiettivo, slack/surplus, $x=x^+-x^-$, $x=-x'$, uguaglianza = due disuguaglianze.
+\item Regione ammissibile = poliedro (intersezione finita di semispazi chiusi), quindi convessa. Politopo = poliedro limitato.
+\item Esiti: inammissibile, illimitato, ottimo unico, infiniti ottimi. Mai esattamente 2.
+\item Vertice: non è combinazione convessa stretta di due punti distinti di $P$ ($\Leftrightarrow$ $n$ vincoli attivi linearmente indipendenti). Direzione di recessione: $Ad\le0$, $d\ne0$.
+\item $P=\mathrm{conv}\{v^i\}+\mathrm{cono}\{e^j\}$. Se l'ottimo è finito: $c^Te^j\le0$ per ogni $j$ ed esiste un vertice ottimo (teorema fondamentale).
+\item Con $c\ne0$ l'ottimo sta sulla frontiera; due ottimi $\Rightarrow$ infiniti; ottimo locale = globale.
+\end{itemize}
