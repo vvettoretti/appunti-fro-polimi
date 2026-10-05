@@ -92,9 +92,95 @@ $\min\{x_1-2x_2:\ x_1+x_2\ge 2,\ \ x_1-x_2=-1,\ \ x_1\ge0,\ x_2\text{ libera}\}$
 
 Ogni vincolo $a_i^Tx\le b_i$ è associato all'\textbf{iperpiano} $\{x\in\R^n:a_i^Tx=b_i\}$ (in $\R^2$ una retta) e definisce il \textbf{semispazio chiuso} ammissibile $\{x:a_i^Tx\le b_i\}$. La regione ammissibile è l'intersezione di tutti i semispazi.
 
+\begin{center}
+\begin{tikzpicture}[scale=0.5,>=Stealth]
+\begin{scope}
+\clip (-1,-1) rectangle (9,8.5);
+\fill[blue!10] (-1,8.5)--(-1,-1)--(9,-1)--(9,3.5)--cycle;
+\draw[thick] (-1,8.5)--(9,3.5);
+\foreach \t in {0,0.08,...,1} \draw[gray!70] ($(-1,8.5)!\t!(9,3.5)$)--++(0.25,0.5);
+\end{scope}
+\draw[->] (-1,0)--(9.3,0) node[below] {$x_1$}; \draw[->] (0,-1)--(0,8.8) node[left] {$x_2$};
+\draw[->,very thick,red!70!black] (4,5.5)--++(1,2) node[above,font=\scriptsize] {$a$};
+\node[font=\scriptsize,fill=white,inner sep=1pt] at (3,2) {$a^Tx\le b$};
+\node[font=\scriptsize,rotate=-26.6] at (6.2,5.5) {$a^Tx=b$};
+\node[font=\scriptsize,align=center] at (4,-2.3) {(i) un vincolo: iperpiano e semispazio;\\ $a$ è normale all'iperpiano e punta fuori};
+\begin{scope}[xshift=13cm]
+\fill[blue!12] (0,0)--(5,0)--(5,1.5)--(3,3.5)--(0,4)--cycle;
+\draw[gray] (-0.5,4.08)--(8,2.67); \draw[gray] (5,-0.6)--(5,7.5); \draw[gray] (-0.5,7.5)--(7.5,-0.5);
+\draw[thick] (0,0)--(5,0)--(5,1.5)--(3,3.5)--(0,4)--cycle;
+\draw[->] (-1,0)--(8.3,0) node[below] {$x_1$}; \draw[->] (0,-1)--(0,8.8) node[left] {$x_2$};
+\node[font=\scriptsize,align=center] at (4,-2.3) {(ii) intersezione di semispazi\\ $=$ poligono convesso (poliedro)};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+Per capire da che parte sta il semispazio basta provare un punto: se l'origine soddisfa il vincolo, la parte ammissibile è quella che contiene l'origine. Il vettore dei coefficienti $a$ punta sempre verso la parte \emph{non} ammissibile di un vincolo $\le$.
+
 Le \textbf{curve di livello} dell'obiettivo sono gli iperpiani $c^Tx=z$: rette parallele, ognuna associata a un valore $z$. Il \textbf{gradiente} $\nabla(c^Tx)=c$ è perpendicolare alle curve di livello e indica la direzione di crescita.
 
-\textbf{Procedura} (2 variabili): disegna la regione; disegna una curva di livello; spostala parallelamente nella direzione di $c$ (per un $\min$: nella direzione $-c$) fino all'ultima posizione in cui tocca ancora la regione. Il valore di quella retta è l'ottimo, i punti di contatto sono le soluzioni ottime. Per il coltivatore: $3x_L+5x_P=0,30,42,44$; l'ultima che tocca è $z=44$ in $(8,4)$ (vedi la figura di \S\ref{sec:colt}). Il punto esatto si trova risolvendo il sistema dei due vincoli attivi: $x_L+x_P=12$, $x_L+2x_P=16$.
+\textbf{Procedura} (2 variabili): disegna la regione; disegna una curva di livello; spostala parallelamente nella direzione di $c$ (per un $\min$: nella direzione $-c$) fino all'ultima posizione in cui tocca ancora la regione. Il valore di quella retta è l'ottimo, i punti di contatto sono le soluzioni ottime. Per il coltivatore: $3x_L+5x_P=0,30,42,44$; l'ultima che tocca è $z=44$ in $(8,4)$. Il punto esatto si trova risolvendo il sistema dei due vincoli attivi: $x_L+x_P=12$, $x_L+2x_P=16$.
+
+\begin{center}
+\begin{tikzpicture}[scale=0.62,>=Stealth]
+\begin{scope}
+\clip (-0.8,-0.8) rectangle (14,9.6);
+\fill[blue!12] (0,0)--(10,0)--(10,2)--(8,4)--(4,6)--(0,6)--cycle;
+\draw[thick,red!70!black] (12,0)--(2.4,9.6);
+\draw[thick,green!50!black] (10,-0.8)--(10,9.6);
+\draw[thick,orange!80!black] (-0.8,6)--(14,6);
+\draw[thick,violet] (-0.8,8.4)--(14,1);
+\foreach \z/\c in {0/gray,30/gray,42/gray,44/black} \draw[dashed,\c] (\z/3+1.6,-0.96)--(-0.8,\z/5+0.48);
+\end{scope}
+\draw[->] (-0.8,0)--(14.3,0) node[below] {$x_L$}; \draw[->] (0,-0.8)--(0,9.9) node[left] {$x_P$};
+\foreach \x in {2,4,...,12} \draw (\x,0.1)--(\x,-0.1) node[below,font=\scriptsize] {\x};
+\foreach \y in {2,4,6,8} \draw (0.1,\y)--(-0.1,\y) node[left,font=\scriptsize] {\y};
+\node[font=\scriptsize,gray,anchor=east] at (-0.9,0.2) {$z=0$};
+\node[font=\scriptsize,gray,fill=blue!12,inner sep=1pt] at (5,3) {$z=30$};
+\node[font=\scriptsize,gray,fill=white,inner sep=1pt] at (1.5,7.5) {$z=42$};
+\node[font=\scriptsize,fill=white,inner sep=1pt] at (13.1,0.95) {$z=44$};
+\draw[->,very thick] (1.5,1.5)--++(1.2,2) node[above,font=\scriptsize] {$c=(3,5)$};
+\fill (8,4) circle (3.5pt);
+\draw (8,4)--(11.6,5) node[right,font=\small,fill=white,inner sep=1pt] {$x^*=(8,4)$};
+\fill (4,6) circle (2.5pt);
+\begin{scope}[xshift=15.2cm,yshift=8.6cm,font=\scriptsize]
+\draw[thick,red!70!black] (0,0)--(0.8,0) node[right,black] {$x_L+x_P\le12$ (terreno)};
+\draw[thick,green!50!black] (0,-0.7)--(0.8,-0.7) node[right,black] {$x_L\le10$ (semi)};
+\draw[thick,orange!80!black] (0,-1.4)--(0.8,-1.4) node[right,black] {$x_P\le6$ (tuberi)};
+\draw[thick,violet] (0,-2.1)--(0.8,-2.1) node[right,black] {$x_L+2x_P\le16$ (stallatico)};
+\draw[dashed] (0,-2.8)--(0.8,-2.8) node[right,black] {curve di livello $3x_L+5x_P=z$};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+Le curve $z=0,30,42$ intersecano la regione; $z=44$ la tocca solo in $(8,4)$; ogni $z>44$ non la tocca più. Nota che il vertice $(4,6)$ (valore 42) non è ottimo anche se ``sta in alto'': conta la direzione di $c$, non la posizione.
+
+\begin{esbox}[un problema di minimo con regione illimitata]
+\[\min\ x_1+x_2\quad\st\ x_1+2x_2\ge4,\quad 3x_1+x_2\ge6,\quad x_1,x_2\ge0.\]
+\begin{center}
+\begin{tikzpicture}[scale=0.62,>=Stealth]
+\begin{scope}
+\clip (-0.6,-0.6) rectangle (7.5,7.5);
+\fill[blue!12] (0,7.5)--(0,6)--(1.6,1.2)--(4,0)--(7.5,0)--(7.5,7.5)--cycle;
+\draw[thick,red!70!black] (-0.6,7.8)--(2.5,-1.5);
+\draw[thick,violet] (-0.6,2.3)--(7.5,-1.75);
+\draw[dashed] (0,2.8)--(2.8,0);
+\draw[dashed,gray] (0,5)--(5,0);
+\draw[dashed,gray] (0,7)--(7,0);
+\end{scope}
+\draw[->] (-0.6,0)--(7.8,0) node[below] {$x_1$}; \draw[->] (0,-0.6)--(0,7.8) node[left] {$x_2$};
+\foreach \x in {2,4,6} \draw (\x,0.1)--(\x,-0.1) node[below,font=\scriptsize] {\x};
+\foreach \y in {2,4,6} \draw (0.1,\y)--(-0.1,\y) node[left,font=\scriptsize] {\y};
+\fill (1.6,1.2) circle (3.5pt) node[left=3pt,font=\scriptsize,fill=white,inner sep=1pt] {$x^*=(1.6,\,1.2)$};
+\fill (0,6) circle (2.5pt) node[right,font=\scriptsize] {$(0,6)$: 6};
+\fill (4,0) circle (2.5pt) node[above right,font=\scriptsize] {$(4,0)$: 4};
+\draw[->,very thick] (5,5)--(4,4) node[below left,font=\scriptsize] {$-c$};
+\node[font=\scriptsize,red!70!black] at (2.6,6.8) {$3x_1+x_2=6$};
+\node[font=\scriptsize,violet,anchor=east] at (-0.7,1.7) {$x_1+2x_2=4$};
+\node[font=\scriptsize,gray] at (5.6,2.1) {$z=5$};
+\end{tikzpicture}
+\end{center}
+Per un minimo ci si muove lungo $-c=(-1,-1)$: le curve di livello $z=7,5,\dots$ scendono finché toccano la regione per l'ultima volta nel vertice $(1.6,1.2)$, intersezione dei due vincoli ($x_1+2x_2=4$, $3x_1+x_2=6$), con $z^*=2.8$. Confronto con gli altri vertici: $(0,6)$ vale 6, $(4,0)$ vale 4.
+\textbf{Regione illimitata ma ottimo finito}: le direzioni di recessione sono $d\ge0$ e $c^Td=d_1+d_2\ge0$, quindi muoversi all'infinito fa solo \emph{peggiorare} un minimo. Lo stesso problema con $\max$ sarebbe invece illimitato.
+\end{esbox}
 
 \textbf{Osservazione}: la soluzione ottima si trova sulla \emph{frontiera} della regione ammissibile.
 
@@ -123,13 +209,40 @@ Le \textbf{curve di livello} dell'obiettivo sono gli iperpiani $c^Tx=z$: rette p
 \draw[->,thick,red] (4,2.5)--(8,2.5);
 \node[font=\scriptsize,align=center] at (5.5,-2) {(c) illimitato\\ $\max x_1$, \ $0\le x_2\le5$, $x_1\ge0$};
 \end{scope}
+\begin{scope}[yshift=-12.5cm]
+\fill[blue!12] (0,0)--(10,0)--(10,2)--(8,4)--(4,6)--(0,6)--cycle;
+\draw[->] (-0.3,0)--(11.5,0); \draw[->] (0,-0.3)--(0,8);
+\draw[thick] (0,0)--(10,0)--(10,2)--(8,4)--(4,6)--(0,6)--cycle;
+\draw[dashed,red] (-1,0.6)--(2,-1.2);
+\fill[red] (0,0) circle (5pt);
+\draw[->,thick,red] (6,4)--(4.8,2);
+\node[font=\scriptsize,align=center] at (5.5,-2) {(a') ottimo unico (minimo)\\ $\min 3x_1+5x_2$: $x^*=(0,0)$};
+\end{scope}
+\begin{scope}[xshift=14cm,yshift=-12.5cm]
+\fill[blue!12] (0,8)--(0,3)--(3,1)--(8,0)--(11,0)--(11,8)--cycle;
+\draw[->] (-0.3,0)--(11.5,0); \draw[->] (0,-0.3)--(0,8);
+\draw[thick] (0,8)--(0,3)--(3,1)--(8,0)--(11,0);
+\draw[ultra thick,red] (0,8)--(0,3);
+\draw[->,thick,red] (4,4)--(2.5,4);
+\node[font=\scriptsize,align=center] at (5.5,-2) {(b') infiniti ottimi (semiretta)\\ $\min x_1$: lato $x_1=0$, $x_2\ge3$};
+\end{scope}
+\begin{scope}[xshift=28cm,yshift=-12.5cm]
+\fill[blue!20] (0,0)--(2.5,0)--(0,2.5)--cycle;
+\fill[red!15] (5,0)--(11,0)--(11,8)--(0,8)--(0,5)--cycle;
+\draw[thick,blue!60!black] (-0.3,2.8)--(2.8,-0.3);
+\draw[thick,red!70!black] (-0.3,5.3)--(5.3,-0.3);
+\draw[->] (-0.3,0)--(11.5,0); \draw[->] (0,-0.3)--(0,8);
+\node[font=\scriptsize,blue!60!black] at (1.2,0.7) {$\le1$};
+\node[font=\scriptsize,red!70!black] at (5.5,4) {$x_1+x_2\ge2$};
+\node[font=\scriptsize,align=center] at (5.5,-2) {(d) inammissibile\\ i due semispazi non si intersecano};
+\end{scope}
 \end{tikzpicture}
 \end{center}
 \begin{itemize}[nosep]
-\item \textbf{(a) Unica} soluzione ottima, in un vertice.
-\item \textbf{(b) Infinite} soluzioni ottime: la curva di livello è parallela a un lato della regione; ottimi tutti i punti del segmento tra $(8,4)$ e $(10,2)$, valore 12. Gli estremi del segmento sono vertici.
+\item \textbf{(a), (a') Unica} soluzione ottima, in un vertice. Con lo stesso $c$, il massimo e il minimo stanno in vertici ``opposti'' rispetto alla direzione $c$.
+\item \textbf{(b) Infinite} soluzioni ottime: la curva di livello è parallela a un lato della regione; ottimi tutti i punti del segmento tra $(8,4)$ e $(10,2)$, valore 12. Gli estremi del segmento sono vertici. In (b') l'insieme degli ottimi è addirittura illimitato (una semiretta), ma il valore ottimo ($0$) è finito.
 \item \textbf{(c) Problema illimitato}: regione illimitata e obiettivo che cresce lungo una direzione in cui ci si può muovere all'infinito. Attenzione: \emph{regione illimitata non implica problema illimitato}: sulla stessa regione $\min x_1$ ha ottimo (segmento $x_1=0$) e $\max x_2$ ha ottimo $x_2=5$ (infiniti punti).
-\item \textbf{Problema inammissibile}: $X=\emptyset$, nessuna soluzione (es.\ $x_1+x_2\le1$, $x_1+x_2\ge2$).
+\item \textbf{Problema inammissibile}: $X=\emptyset$, nessuna soluzione (es.\ $x_1+x_2\le1$, $x_1+x_2\ge2$, $x\ge0$: figura sotto, (d)).
 \end{itemize}
 \begin{esame}
 Un problema di PL è sempre in uno di questi casi: \textbf{inammissibile}, \textbf{illimitato}, oppure ha \textbf{ottimo finito}, raggiunto in 1 punto o in infiniti punti. \textbf{Mai esattamente 2} (o un numero finito $>1$) soluzioni ottime. Con variabili intere invece può succedere: $\max\{x_1+x_2: x_1+x_2\le1,\ x\in\{0,1\}^2\}$ ha esattamente 2 soluzioni ottime.
@@ -159,6 +272,55 @@ Dati $x^1,\dots,x^k\in\R^n$ e pesi $\lambda_1,\dots,\lambda_k$, il punto $y=\sum
 Metodo: imposta il sistema lineare nei pesi e controlla i segni (e la somma).
 \end{esbox}
 
+\textbf{Le quattro combinazioni di due vettori} $x'=(4,0)$ e $x''=(1,3)$ (in rosso l'insieme di tutte le combinazioni del tipo indicato):
+\begin{center}
+\begin{tikzpicture}[scale=0.45,>=Stealth]
+\foreach \k/\name in {0/lineare,1/affine,2/conica,3/convessa}{
+\begin{scope}[xshift=\k*8.2cm]
+\ifcase\k
+  \fill[red!15] (-1.5,-1.5) rectangle (5.5,5.5);
+\or
+  \draw[very thick,red!70!black] (5.33,-1)--(-0.33,4.67);
+\or
+  \fill[red!15] (0,0)--(5.5,0)--(5.5,5.5)--(1.83,5.5)--cycle;
+  \draw[very thick,red!70!black] (5.5,0)--(0,0)--(1.83,5.5);
+\or
+  \draw[very thick,red!70!black] (4,0)--(1,3);
+\fi
+\draw[->,gray] (-1.5,0)--(5.7,0); \draw[->,gray] (0,-1.5)--(0,5.7);
+\draw[->,thick] (0,0)--(4,0); \draw[->,thick] (0,0)--(1,3);
+\fill (4,0) circle (3pt) node[below,font=\scriptsize] {$x'$};
+\fill (1,3) circle (3pt) node[left,font=\scriptsize] {$x''$};
+\node[font=\small] at (2,-2.6) {\name};
+\end{scope}}
+\end{tikzpicture}
+\end{center}
+Lineare: tutto il piano (i due vettori sono indipendenti). Affine: la retta per i due punti (anche oltre gli estremi, con un peso negativo). Conica: l'angolo tra le due semirette uscenti dall'origine. Convessa: solo il segmento. Il punto $(2,2)$ sta sul segmento, quindi è combinazione convessa (e anche affine, conica e lineare).
+
+\begin{center}
+\begin{tikzpicture}[scale=0.62,>=Stealth]
+\begin{scope}
+\fill[blue!12] (1,1)--(3,1)--(2,3)--cycle; \draw[thick] (1,1)--(3,1)--(2,3)--cycle;
+\foreach \p/\l/\a in {{(1,1)}/{(1,1)}/below left,{(3,1)}/{(3,1)}/below right,{(2,3)}/{(2,3)}/above} \fill \p circle (2.5pt) node[\a,font=\scriptsize] {$\l$};
+\fill[red] (2,2) circle (3pt) node[right=2pt,font=\scriptsize,red] {$(2,2)=\tfrac14(1,1)+\tfrac14(3,1)+\tfrac12(2,3)$};
+\draw[->,gray] (-0.3,0)--(4,0); \draw[->,gray] (0,-0.3)--(0,4);
+\node[font=\scriptsize] at (2,-0.9) {combinazione convessa di 3 punti: il triangolo};
+\end{scope}
+\begin{scope}[xshift=10cm]
+\fill[blue!12] (0,0)--(5.5,1.83)--(5.5,5.5)--(3.67,5.5)--cycle;
+\draw[->,thick] (0,0)--(2,3) node[left,font=\scriptsize] {$(2,3)$};
+\draw[->,thick] (0,0)--(3,1) node[below right,font=\scriptsize] {$(3,1)$};
+\draw[dashed] (2.286,3.429)--(4,4)--(1.714,0.571);
+\draw[->,red!70!black] (0,0)--(2.286,3.429) node[left,font=\scriptsize] {$\tfrac87(2,3)$};
+\draw[->,red!70!black] (0,0)--(1.714,0.571);
+\node[font=\scriptsize,red!70!black] at (2.3,0.05) {$\tfrac47(3,1)$};
+\fill[red] (4,4) circle (3pt) node[right,font=\scriptsize,red] {$(4,4)$};
+\draw[->,gray] (-0.3,0)--(5.7,0); \draw[->,gray] (0,-0.3)--(0,5.7);
+\node[font=\scriptsize] at (2.8,-0.9) {combinazione conica: regola del parallelogramma};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+
 \subsection{Insiemi convessi, coni, involucri}
 \begin{defbox}[insieme convesso]
 $S\subseteq\R^n$ è \textbf{convesso} se per ogni $x,y\in S$ e $\lambda\in[0,1]$ si ha $\lambda x+(1-\lambda)y\in S$ (contiene il segmento tra due suoi punti qualsiasi).
@@ -170,6 +332,109 @@ $C\subseteq\R^n$ è un \textbf{cono} se $x\in C\Rightarrow \lambda x\in C$ per o
 L'\textbf{involucro (inviluppo) convesso} $\mathrm{conv}(K)$ è l'insieme di tutte le combinazioni convesse di elementi di $K$: il più piccolo convesso che contiene $K$. L'\textbf{involucro conico} $\mathrm{cono}(K)$ è l'insieme di tutte le combinazioni coniche: il più piccolo cono convesso che contiene $K$.
 \end{defbox}
 Esempio: $\mathrm{conv}\{(0,0),(2,0),(1,2)\}$ è il triangolo pieno con quei vertici, cioè $\{x: x_2\ge0,\ x_2\le2x_1,\ x_2\le4-2x_1\}$.
+
+\needspace{12\baselineskip}
+\paragraph{Insiemi convessi e non convessi.}
+\begin{center}
+\begin{tikzpicture}[scale=0.55,>=Stealth]
+\begin{scope}
+\fill[blue!12] (2,1.5) ellipse (2 and 1.4); \draw[thick] (2,1.5) ellipse (2 and 1.4);
+\draw[red!70!black,thick] (0.7,1.0)--(3.3,2.2); \fill (0.7,1) circle (2.5pt) (3.3,2.2) circle (2.5pt);
+\node[font=\scriptsize] at (2,-0.6) {convesso};
+\end{scope}
+\begin{scope}[xshift=5.5cm]
+\fill[blue!12] (0,0)--(4,0)--(2.5,3)--cycle; \draw[thick] (0,0)--(4,0)--(2.5,3)--cycle;
+\draw[red!70!black,thick] (1,0.3)--(2.6,2.4); \fill (1,0.3) circle (2.5pt) (2.6,2.4) circle (2.5pt);
+\node[font=\scriptsize] at (2,-0.6) {convesso};
+\end{scope}
+\begin{scope}[xshift=11.5cm]
+\fill[blue!12] (0,0)--(4,0)--(4,1)--(1,1)--(1,3)--(0,3)--cycle; \draw[thick] (0,0)--(4,0)--(4,1)--(1,1)--(1,3)--(0,3)--cycle;
+\draw[red!70!black,thick,dashed] (0.5,2.6)--(3.6,0.6); \fill (0.5,2.6) circle (2.5pt) (3.6,0.6) circle (2.5pt);
+\node[font=\scriptsize,align=center] at (2,-0.9) {non convesso:\\il segmento esce};
+\end{scope}
+\begin{scope}[xshift=17.5cm]
+\fill[blue!12] (2,1.5) circle (1.5); \fill[white] (2,1.5) circle (0.7); \draw[thick] (2,1.5) circle (1.5) (2,1.5) circle (0.7);
+\draw[red!70!black,thick,dashed] (0.8,1.2)--(3.2,1.8); \fill (0.8,1.2) circle (2.5pt) (3.2,1.8) circle (2.5pt);
+\node[font=\scriptsize,align=center] at (2,-0.9) {non convesso\\(corona)};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+La corona circolare $\{1\le\|x\|\le2\}$ è un esempio di insieme definito da un vincolo ``$\ge$'' su una funzione convessa: non è convesso. Un vincolo $\|x\|\le2$ invece dà un insieme convesso.
+
+\needspace{12\baselineskip}
+\paragraph{Coni.}
+\begin{center}
+\begin{tikzpicture}[scale=0.52,>=Stealth]
+\begin{scope}
+\fill[blue!12] (0,0)--(4,1.2)--(4,4)--(1.6,4)--cycle;
+\draw[thick] (4,1.2)--(0,0)--(1.6,4);
+\fill (0,0) circle (2.5pt) node[below left,font=\scriptsize] {$0$};
+\fill[red] (1.5,1.3) circle (2.5pt); \fill[red] (3,2.6) circle (2.5pt); \draw[->,red,dashed] (1.5,1.3)--(2.9,2.51);
+\node[font=\scriptsize,red] at (2.2,2.4) {$\lambda x$};
+\node[font=\scriptsize,align=center] at (2,-1) {cono convesso\\(poliedrico)};
+\end{scope}
+\begin{scope}[xshift=6cm]
+\draw[very thick,blue!60!black] (0,0)--(4,0); \draw[very thick,blue!60!black] (0,0)--(0,4);
+\draw[red!70!black,dashed,thick] (2.5,0)--(0,2.5); \fill[red!70!black] (1.25,1.25) circle (2.5pt);
+\fill (0,0) circle (2.5pt);
+\node[font=\scriptsize,align=center] at (2,-1) {cono non convesso\\(due semiassi)};
+\end{scope}
+\begin{scope}[xshift=12cm]
+\fill[blue!12] (0,0)--(4,0.8)--(4,2.4)--cycle; \fill[blue!12] (0,0)--(1.2,4)--(-1.2,4)--cycle;
+\draw[thick] (4,0.8)--(0,0)--(4,2.4) (1.2,4)--(0,0)--(-1.2,4);
+\fill (0,0) circle (2.5pt);
+\node[font=\scriptsize,align=center] at (1.4,-1) {cono non convesso\\(due settori)};
+\end{scope}
+\begin{scope}[xshift=18cm]
+\fill[blue!12] (0,0)--(3,1)--(1,3)--cycle; \draw[thick] (0,0)--(3,1)--(1,3)--cycle;
+\fill (1.2,1.2) circle (2.5pt) node[right,font=\scriptsize] {$x$};
+\fill[red] (3.6,3.6) circle (2.5pt) node[right,font=\scriptsize,red] {$3x\notin$};
+\fill (0,0) circle (2.5pt);
+\node[font=\scriptsize,align=center] at (1.8,-1) {\emph{non} è un cono\\(limitato)};
+\end{scope}
+\begin{scope}[xshift=26cm]
+\fill[blue!12] (0,0)--(-1.8,3.6)--(1.8,3.6)--cycle;
+\fill[blue!20] (0,3.6) ellipse (1.8 and 0.45); \draw[thick] (0,3.6) ellipse (1.8 and 0.45);
+\draw[thick] (-1.8,3.6)--(0,0)--(1.8,3.6);
+\fill (0,0) circle (2.5pt);
+\node[font=\scriptsize,align=center] at (0,-1) {cono di secondo ordine\\ in $\R^3$: convesso,\\ non poliedrico};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+Un cono contiene sempre l'origine (con $\lambda=0$) ed è ``illimitato'' in ogni sua direzione: l'unico cono limitato è $\{0\}$. Un cono convesso in $\R^2$ diverso dal piano e dal semipiano è sempre un ``angolo'' (settore) con vertice nell'origine.
+
+\needspace{12\baselineskip}
+\paragraph{Involucri.}
+\begin{center}
+\begin{tikzpicture}[scale=0.6,>=Stealth]
+\begin{scope}
+\fill[blue!12] (0,0)--(2,0)--(1,2)--cycle; \draw[thick] (0,0)--(2,0)--(1,2)--cycle;
+\foreach \p in {(0,0),(2,0),(1,2)} \fill \p circle (2.5pt);
+\node[font=\scriptsize,align=center] at (1,-1) {$\mathrm{conv}\{(0,0),$\\$(2,0),(1,2)\}$};
+\end{scope}
+\begin{scope}[xshift=4.6cm]
+\fill[blue!12] (0,0.5)--(1.5,0)--(3.5,0.6)--(4,2.2)--(2.2,3.2)--(0.4,2.4)--cycle;
+\draw[thick] (0,0.5)--(1.5,0)--(3.5,0.6)--(4,2.2)--(2.2,3.2)--(0.4,2.4)--cycle;
+\foreach \p in {(0,0.5),(1.5,0),(3.5,0.6),(4,2.2),(2.2,3.2),(0.4,2.4)} \fill \p circle (2.5pt);
+\foreach \p in {(1.2,1.2),(2.5,1.8),(2,0.9),(3,1.5),(1.3,2.3)} \fill[gray] \p circle (2pt);
+\node[font=\scriptsize,align=center] at (2,-0.8) {$\mathrm{conv}$ di un insieme finito:\\ gli ``esterni'' sono i vertici};
+\end{scope}
+\begin{scope}[xshift=10.6cm]
+\fill[blue!12] (0,0)--(4,2)--(4,4)--(2,4)--cycle;
+\draw[thick] (4,2)--(0,0)--(2,4);
+\draw[->,very thick] (0,0)--(2,1) node[below right,font=\scriptsize] {$(2,1)$};
+\draw[->,very thick] (0,0)--(1,2) node[left,font=\scriptsize] {$(1,2)$};
+\node[font=\scriptsize] at (2,-1) {$\mathrm{cono}\{(2,1),(1,2)\}$};
+\end{scope}
+\begin{scope}[xshift=16.8cm]
+\fill[blue!12] (0,0)--(4,0)--(4,4)--(0,4)--cycle;
+\draw[->,very thick] (0,0)--(2,0) node[above right,font=\scriptsize] {$(1,0)$};
+\draw[->,very thick] (0,0)--(0,2) node[left,font=\scriptsize] {$(0,1)$};
+\draw[->,very thick] (0,0)--(1.4,1.4) node[above right,font=\scriptsize] {$(1,1)$};
+\node[font=\scriptsize,align=center] at (2,-1.2) {$\mathrm{cono}\{(1,0),(0,1),(1,1)\}$\\ $=\R^2_+$ ($(1,1)$ superfluo)};
+\end{scope}
+\end{tikzpicture}
+\end{center}
 
 \subsection{Poliedri}
 \textbf{Proprietà.}
@@ -184,6 +449,30 @@ Quindi \textbf{la regione ammissibile di una PL è un poliedro} (convesso e chiu
 
 \emph{E con un vincolo non lineare?} In generale no: $\{x: x_1^2+x_2^2\le1\}$ è convesso ma non è un poliedro (servirebbero infiniti semispazi); $\{x: x_1^2+x_2^2\ge1\}$ non è nemmeno convesso.
 
+\begin{center}
+\begin{tikzpicture}[scale=0.55,>=Stealth]
+\begin{scope}
+\fill[blue!12] (0,0)--(3,0)--(4,1.5)--(2.5,3.2)--(0.3,2.5)--cycle; \draw[thick] (0,0)--(3,0)--(4,1.5)--(2.5,3.2)--(0.3,2.5)--cycle;
+\node[font=\scriptsize,align=center] at (2,-1) {politopo\\ (poliedro limitato)};
+\end{scope}
+\begin{scope}[xshift=6.5cm]
+\fill[blue!12] (0,4)--(0,1.5)--(1.5,0)--(4.5,0)--(4.5,4)--cycle; \draw[thick] (0,4)--(0,1.5)--(1.5,0)--(4.5,0);
+\draw[->,red!70!black] (2.5,2)--(4,3.2);
+\node[font=\scriptsize,align=center] at (2.2,-1) {poliedro illimitato};
+\end{scope}
+\begin{scope}[xshift=13.5cm]
+\fill[blue!12] (2,1.6) circle (1.6); \draw[thick] (2,1.6) circle (1.6);
+\draw[gray,dashed] (3.6,1.6)--(2.8,2.99)--(1.2,2.99)--(0.4,1.6)--(1.2,0.21)--(2.8,0.21)--cycle;
+\node[font=\scriptsize,align=center] at (2,-1) {disco: convesso,\\ non poliedro};
+\end{scope}
+\begin{scope}[xshift=19.5cm]
+\fill[blue!12] (0,0) rectangle (4,3.2); \fill[white] (2,1.6) circle (1); \draw[thick] (0,0) rectangle (4,3.2); \draw[thick] (2,1.6) circle (1);
+\node[font=\scriptsize,align=center] at (2,-1) {$\{x_1^2+x_2^2\ge1\}\cap$ box:\\ non convesso};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+Il disco si può approssimare con poligoni inscritti (tratteggio) ma nessun numero finito di semispazi lo descrive esattamente.
+
 \textbf{Coni e poliedri.} Non tutti i coni convessi sono poliedri: il cono di secondo ordine (``gelato'') $\{x\in\R^3: x_3\ge\sqrt{x_1^2+x_2^2}\}$ è un cono convesso ma non poliedrico.
 \begin{prop}
 $P$ è un \textbf{cono poliedrico} se e solo se esiste una matrice $Q$ tale che $P=\{x\in\R^n: Qx\le0\}$ (termini noti tutti nulli).
@@ -195,10 +484,46 @@ $v\in P$ è un \textbf{vertice} (punto estremo) di $P$ se non si può scrivere c
 \end{defbox}
 Caratterizzazione algebrica (utile per il simplesso): in $P=\{x\in\R^n:Ax\le b\}$, $v$ è un vertice se e solo se tra i vincoli \emph{attivi} in $v$ ($a_i^Tv=b_i$) ce ne sono $n$ linearmente indipendenti. In $\R^2$: un vertice è l'intersezione di due rette di vincolo non parallele. Il coltivatore ha 6 vertici: $(0,0),(10,0),(10,2),(8,4),(4,6),(0,6)$. Il punto $(12,0)$ è intersezione di due rette di vincolo ma non è ammissibile, quindi \emph{non} è un vertice.
 
+\begin{center}
+\begin{tikzpicture}[scale=0.45,>=Stealth]
+\fill[blue!12] (0,0)--(10,0)--(10,2)--(8,4)--(4,6)--(0,6)--cycle;
+\draw[gray] (12,0)--(3,9); \draw[gray] (10,-0.6)--(10,8.5); \draw[gray] (-0.6,6)--(13,6); \draw[gray] (-0.6,8.3)--(13,1.5);
+\draw[thick] (0,0)--(10,0)--(10,2)--(8,4)--(4,6)--(0,6)--cycle;
+\draw[->] (-0.6,0)--(13.5,0) node[below] {$x_1$}; \draw[->] (0,-0.6)--(0,9) node[left] {$x_2$};
+\foreach \p in {(0,0),(10,0),(10,2),(8,4),(4,6),(0,6)} \fill[red!70!black] \p circle (5pt);
+\foreach \p in {(12,0),(6,6),(10,3),(10,6)} \draw[thick] \p ++(-0.25,-0.25)--++(0.5,0.5) \p ++(-0.25,0.25)--++(0.5,-0.5);
+\fill (5,3) circle (3pt) node[right,font=\scriptsize] {interno};
+\fill (9,3) circle (3pt);
+\draw[dashed] (8,4)--(10,2); \node[font=\scriptsize,align=left,anchor=west] at (13.3,3.3) {$\bullet$ rossi: vertici (2 vincoli attivi indipendenti)\\ $\times$: intersezioni di rette di vincolo\\ \quad non ammissibili $\Rightarrow$ non vertici\\ $(9,3)$: sul bordo ma non vertice,\\ \quad è il punto medio di $(8,4)$ e $(10,2)$};
+\end{tikzpicture}
+\end{center}
+
 \begin{defbox}[direzione di recessione]
 $d\ne0$ è una \textbf{direzione di recessione} di $P$ se per ogni $x\in P$ e ogni $\lambda\ge0$ si ha $x+\lambda d\in P$ (da qualunque punto ci si può muovere all'infinito lungo $d$ restando in $P$). Per $P=\{x:Ax\le b\}\neq\emptyset$: $d$ è di recessione se e solo se $Ad\le0$. L'insieme $\{d: Ad\le0\}$ è il \emph{cono di recessione}.
 \end{defbox}
 Un politopo non ha direzioni di recessione. Esempio delle slide: $P=\{x\ge0,\ x_2\le5\}$: $Ad\le0$ dà $-d_1\le0$, $-d_2\le0$, $d_2\le0$, cioè $d=(d_1,0)$ con $d_1>0$: l'unica direzione (a meno di scala) è $(1,0)$.
+
+\begin{center}
+\begin{tikzpicture}[scale=0.5,>=Stealth]
+\begin{scope}
+\fill[blue!12] (0,0) rectangle (9,5); \draw[thick] (9,0)--(0,0)--(0,5)--(9,5);
+\draw[->] (-0.5,0)--(9.5,0) node[below] {$x_1$}; \draw[->] (0,-0.5)--(0,6.5) node[left] {$x_2$};
+\foreach \p in {(1,1),(2,4),(4,2.5)} {\fill \p circle (3pt); \draw[->,thick,red!70!black] \p--++(2.5,0);}
+\draw[->,thick,gray,dashed] (5,3.5)--++(1.5,1.5); \node[font=\scriptsize,gray] at (7.3,5.6) {$(1,1)$: esce};
+\node[font=\scriptsize] at (4.5,-1.3) {$\{x\ge0,\ x_2\le5\}$: cono di recessione $=\mathrm{cono}\{(1,0)\}$};
+\end{scope}
+\begin{scope}[xshift=13cm]
+\fill[blue!12] (0,6.5)--(0,3)--(2,1)--(5,0)--(9,0)--(9,6.5)--cycle; \draw[thick] (0,6.5)--(0,3)--(2,1)--(5,0)--(9,0);
+\draw[->] (-0.5,0)--(9.5,0) node[below] {$x_1$}; \draw[->] (0,-0.5)--(0,7) node[left] {$x_2$};
+\begin{scope}[shift={(4.5,3)}]
+\fill[red!15] (0,0)--(2.5,0)--(2.5,2.5)--(0,2.5)--cycle;
+\draw[->,thick,red!70!black] (0,0)--(2.5,0); \draw[->,thick,red!70!black] (0,0)--(0,2.5);
+\end{scope}
+\node[font=\scriptsize] at (4.5,-1.3) {poliedro con $x\ge0$: cono di recessione $=\R^2_+$};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+Il cono di recessione si può disegnare ``appoggiato'' in qualunque punto del poliedro: da ogni punto ci si muove lungo tutte le sue direzioni senza uscire.
 
 \subsection{Teorema di decomposizione dei poliedri}
 \begin{prop}[decomposizione, Minkowski--Weyl]
@@ -216,6 +541,44 @@ cioè ogni $x\in P$ è $x=\sum_{i}\lambda_iv^i+\sum_j\mu_je^j$ con $\lambda_i\ge
 \item $P_4=\{0\le x_2\le1\}$ (striscia): \emph{nessun vertice} (contiene rette). $P_4=\mathrm{conv}\{(0,0),(0,1)\}+\mathrm{cono}\{(1,0),(-1,0)\}$: i punti $v^i$ esistono ma non sono vertici.
 \end{itemize}
 \end{esbox}
+\begin{center}
+\begin{tikzpicture}[scale=0.62,>=Stealth]
+\begin{scope}
+\fill[blue!12] (1,4.5)--(1,2)--(2,1)--(4.5,1)--(4.5,4.5)--cycle;
+\draw[thick] (1,4.5)--(1,2)--(2,1)--(4.5,1);
+\draw[ultra thick,red!70!black] (1,2)--(2,1);
+\draw[->,very thick,green!50!black] (2,1)--(3.4,1); \draw[->,very thick,green!50!black] (1,2)--(1,3.4);
+\draw[->] (-0.3,0)--(4.8,0); \draw[->] (0,-0.3)--(0,4.8);
+\foreach \x in {1,2,3,4} \draw (\x,0.08)--(\x,-0.08) node[below,font=\tiny] {\x};
+\foreach \y in {1,2,3,4} \draw (0.08,\y)--(-0.08,\y) node[left,font=\tiny] {\y};
+\node[font=\small] at (3,3) {$P_1$};
+\end{scope}
+\begin{scope}[xshift=6.5cm]
+\fill[blue!12] (1,1) rectangle (4,3); \draw[thick] (1,1) rectangle (4,3);
+\foreach \p in {(1,1),(4,1),(4,3),(1,3)} \fill[red!70!black] \p circle (3pt);
+\draw[->] (-0.3,0)--(4.8,0); \draw[->] (0,-0.3)--(0,4.8);
+\node[font=\small] at (2.5,2) {$P_2$};
+\end{scope}
+\begin{scope}[xshift=13cm]
+\fill[blue!12] (0,0) rectangle (4.5,1); \draw[thick] (4.5,0)--(0,0)--(0,1)--(4.5,1);
+\draw[ultra thick,red!70!black] (0,0)--(0,1);
+\draw[->,very thick,green!50!black] (0,0.5)--(1.6,0.5);
+\draw[->] (-0.3,0)--(4.8,0); \draw[->] (0,-0.3)--(0,4.8);
+\node[font=\small] at (3,2) {$P_3$};
+\end{scope}
+\begin{scope}[xshift=21cm]
+\fill[blue!12] (-2.5,0) rectangle (2.5,1); \draw[thick] (-2.5,0)--(2.5,0) (-2.5,1)--(2.5,1);
+\draw[ultra thick,red!70!black,dashed] (0,0)--(0,1);
+\draw[->,very thick,green!50!black] (0,0.5)--(1.5,0.5); \draw[->,very thick,green!50!black] (0,0.5)--(-1.5,0.5);
+\draw[->] (-2.8,0)--(2.8,0); \draw[->] (0,-0.3)--(0,4.8);
+\node[font=\small] at (1.2,2) {$P_4$};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+In rosso la parte $\mathrm{conv}\{v^i\}$ (segmento o vertici), in verde i generatori del cono $\mathrm{cono}\{e^j\}$. $P_1$: ogni punto è un punto del segmento tra $(1,2)$ e $(2,1)$ più una combinazione non negativa di $(1,0)$ e $(0,1)$. $P_2$: solo la parte convessa. $P_3$: segmento più una direzione. $P_4$: il segmento tratteggiato non è fatto di vertici, perché la striscia non ne ha.
+
+\textbf{Come trovare la decomposizione in $\R^2$}: (1) disegna il poliedro; (2) segna i vertici: sono i $v^i$; (3) per ogni lato illimitato prendi la sua direzione: sono gli $e^j$ (equivalentemente risolvi $Ad\le0$ e prendi i raggi estremi del cono che ottieni).
+
 Un poliedro ha almeno un vertice se e solo se non contiene rette. Ogni poliedro della forma $\{x: Ax\le b, x\ge0\}$ non vuoto (quindi ogni PL in forma canonica o standard) ha vertici.
 
 \section{Proprietà della soluzione ottima}
@@ -230,6 +593,16 @@ Dato $(P)\ \max\{c^Tx: x\in P\}$ con $P=\{x\in\R^n:Ax\le b\}$:
 \end{prop}
 \begin{dimo}
 \emph{1.} Se $x^*$ è interno, esiste $\varepsilon>0$ tale che $x^*+\varepsilon c\in P$. Ma $c^T(x^*+\varepsilon c)=c^Tx^*+\varepsilon\|c\|^2>c^Tx^*$: $x^*$ non è ottima.
+\begin{center}
+\begin{tikzpicture}[scale=0.55,>=Stealth]
+\fill[blue!12] (0,0)--(5,0)--(5,2)--(3,4)--(0,3)--cycle; \draw[thick] (0,0)--(5,0)--(5,2)--(3,4)--(0,3)--cycle;
+\draw[dashed,gray] (0.4,2.8)--(3.6,0.2); \draw[dashed,gray] (1.2,3.6)--(4.8,0.6);
+\fill (2,1.5) circle (3pt) node[below left,font=\scriptsize] {$x^*$};
+\draw[->,thick,red!70!black] (2,1.5)--(2.9,2.6) node[above,font=\scriptsize] {$x^*+\varepsilon c$};
+\draw[gray] (2,1.5) circle (0.7);
+\end{tikzpicture}
+\end{center}
+Attorno a un punto interno c'è una pallina tutta contenuta in $P$: muovendosi di poco lungo $c$ si resta ammissibili e si migliora.
 \emph{2.} Se $x',x''$ sono ottime con valore $z^*$, per ogni $\lambda\in[0,1]$ il punto $\lambda x'+(1-\lambda)x''$ sta in $P$ (convesso) e ha valore $\lambda z^*+(1-\lambda)z^*=z^*$ (linearità): tutto il segmento è ottimo.
 \emph{3.} Sia $\bar x$ ottimo locale e supponiamo esista $y\in P$ con $c^Ty>c^T\bar x$. I punti $\bar x+\lambda(y-\bar x)$, $\lambda\in(0,1]$, stanno in $P$ e hanno valore $c^T\bar x+\lambda(c^Ty-c^T\bar x)>c^T\bar x$; per $\lambda$ piccolo sono vicini quanto si vuole a $\bar x$, contro la sua ottimalità locale. \hfill$\square$
 \end{dimo}
