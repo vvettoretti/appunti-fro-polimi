@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - '**.tex'
-      - '.latexmkrc'
+      - '**/.latexmkrc'
       - '.github/workflows/build-release.yml'
   workflow_dispatch:
 
@@ -25,11 +25,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Compila il PDF
+      - name: Compila i PDF
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: appunti_FRO.tex
-          latexmk_use_lualatex: false
+          root_file: |
+            lezioni/appunti_FRO.tex
+            esercitazioni/esercitazioni_FRO.tex
+          work_in_root_file_dir: true
 
       - name: Calcola versione e note di rilascio
         id: meta
@@ -38,7 +40,10 @@ jobs:
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           PREV=$(git describe --tags --abbrev=0 2>/dev/null || true)
           {
-            echo "Appunti di Fondamenti di Ricerca Operativa, build del $(date -u '+%d/%m/%Y %H:%M') UTC."
+            echo "Appunti ed esercitazioni di Fondamenti di Ricerca Operativa, build del $(date -u '+%d/%m/%Y %H:%M') UTC."
+            echo
+            echo "- \`appunti_FRO.pdf\`: teoria delle lezioni"
+            echo "- \`esercitazioni_FRO.pdf\`: esercitazioni con soluzioni"
             echo
             echo "Commit inclusi:"
             if [ -n "$PREV" ]; then
@@ -47,13 +52,15 @@ jobs:
               git log --no-merges --pretty='- %s (%h)'
             fi
           } > notes.md
-          cp appunti_FRO.pdf "appunti_FRO_${TAG}.pdf"
+          mkdir -p dist
+          cp lezioni/appunti_FRO.pdf dist/appunti_FRO.pdf
+          cp esercitazioni/esercitazioni_FRO.pdf dist/esercitazioni_FRO.pdf
 
-      - name: Carica il PDF come artifact
+      - name: Carica i PDF come artifact
         uses: actions/upload-artifact@v4
         with:
-          name: appunti_FRO
-          path: appunti_FRO.pdf
+          name: pdf
+          path: dist/*.pdf
 
       - name: Pubblica la release
         uses: softprops/action-gh-release@v2
@@ -62,6 +69,4 @@ jobs:
           name: Appunti FRO ${{ steps.meta.outputs.tag }}
           body_path: notes.md
           make_latest: true
-          files: |
-            appunti_FRO.pdf
-            appunti_FRO_${{ steps.meta.outputs.tag }}.pdf
+          files: dist/*.pdf

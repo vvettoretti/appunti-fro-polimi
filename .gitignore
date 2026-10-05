@@ -1,4 +1,4 @@
-# Output di LaTeX (il PDF è pubblicato nelle Releases)
+# Output di LaTeX (i PDF sono pubblicati nelle Releases)
 *.pdf
 *.aux
 *.log
